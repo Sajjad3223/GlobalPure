@@ -9,7 +9,10 @@ export default {
     "./error.vue",
   ],
   theme: {
-    extend: {},
+      fontFamily:{
+        'modern':['"Modern No. 20"'],
+        'inter':['Inter'],
+      }
   },
   plugins: [],
 }
