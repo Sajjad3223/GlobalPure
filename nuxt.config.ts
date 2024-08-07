@@ -12,8 +12,13 @@ export default defineNuxtConfig({
   },
   modules: ["@nuxtjs/google-fonts", "nuxt-aos"],
   googleFonts:{
+    download:true,
     families:{
-      Inter:'200..700',
+      Inter:true,
     }
   },
+  aos:{
+    once: true,
+    duration:500,
+  }
 })
