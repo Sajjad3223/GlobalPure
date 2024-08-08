@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-white h-[90px] md:h-[100px] flex sticky top-0 z-50 items-center justify-center" style="box-shadow: 0 3px 20px 0 rgba(0,0,0,0.08)">
+  <header class="bg-white h-[90px] md:h-[100px] flex sticky top-0 z-50 items-center justify-center" style="box-shadow: 0 3px 15px 0 rgba(0,0,0,0.05)">
     <div class="container mx-auto flex items-center justify-between">
       <NuxtLink to="/" class="flex items-center gap-2">
         <img src="~/assets/images/logo.png" alt="logo" class="max-h-[50px] 2xl:max-h-[60px] opacity-0" data-aos="zoom-in" data-aos-once="true">
