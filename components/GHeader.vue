@@ -10,52 +10,24 @@
       </NuxtLink>
       <ul class="hidden md:flex items-center text-xs 2xl:text-base gap-8 2xl:gap-12 uppercase text-[#504A33] font-medium">
         <li class="opacity-0" data-aos="fade-left" data-aos-once="true">
-          <NuxtLink to="/" class="opacity-70 hover:opacity-100 transition-opacity duration-200" exact-active-class="activeNavLink">Home</NuxtLink>
+          <NuxtLink to="/" class="opacity-70 hover:opacity-100 transition-opacity duration-200" exact-active-class="activeNavLink">
+            {{ $t('home') }}
+          </NuxtLink>
         </li>
         <li class="opacity-0" data-aos="fade-left" data-aos-delay="100" data-aos-once="true">
-          <NuxtLink to="/shop" class="opacity-70 hover:opacity-100 transition-opacity duration-200" exact-active-class="activeNavLink">Shop</NuxtLink>
+          <NuxtLink to="/shop" class="opacity-70 hover:opacity-100 transition-opacity duration-200" exact-active-class="activeNavLink">{{ $t('shop') }}</NuxtLink>
         </li>
         <li class="opacity-0" data-aos="fade-left" data-aos-delay="200" data-aos-once="true">
-          <NuxtLink to="/about-us" class="opacity-70 hover:opacity-100 transition-opacity duration-200" exact-active-class="activeNavLink">Our Story</NuxtLink>
+          <NuxtLink to="/about-us" class="opacity-70 hover:opacity-100 transition-opacity duration-200" exact-active-class="activeNavLink">{{ $t('ourStory') }}</NuxtLink>
         </li>
         <li class="opacity-0" data-aos="fade-left" data-aos-delay="400" data-aos-once="true">
-          <NuxtLink to="/recipes" class="opacity-70 hover:opacity-100 transition-opacity duration-200" exact-active-class="activeNavLink">Recipes</NuxtLink>
+          <NuxtLink to="/recipes" class="opacity-70 hover:opacity-100 transition-opacity duration-200" exact-active-class="activeNavLink">{{ $t('recipes') }}</NuxtLink>
         </li>
         <li class="opacity-0" data-aos="fade-left" data-aos-delay="500" data-aos-once="true">
-          <NuxtLink to="/contact-us" class="opacity-70 hover:opacity-100 transition-opacity duration-200" exact-active-class="activeNavLink">Contact Us</NuxtLink>
+          <NuxtLink to="/contact-us" class="opacity-70 hover:opacity-100 transition-opacity duration-200" exact-active-class="activeNavLink">{{ $t('contactus') }}</NuxtLink>
         </li>
       </ul>
       <div class="flex items-center gap-4 2xl:gap-6">
-        <div class="relative">
-          <button @click="showCurrency = !showCurrency" class="text-xs p-1 2xl:px-3 2xl:py-2 flex items-center gap-2 opacity-0" data-aos="zoom-in" data-aos-delay="500" data-aos-once="true">
-            <span>$ USD</span>
-            <svg :class="['w-2 2xl:w-3 transition-transform duration-200',{'-rotate-180':showCurrency}]" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g opacity="0.7">
-                <path d="M12.0416 1.72916L6.49998 7.27082L0.958313 1.72916" stroke="#493E17" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </g>
-            </svg>
-          </button>
-          <Transition name="slideDown">
-            <div v-if="showCurrency" v-click-outside="closeCurrency" class="absolute left-auto right-0 translate-y-2 w-max top-full flex flex-col gap-1 bg-[#FEFCF8] border border-[#453F29]/20 py-1">
-              <button class="flex items-center gap-2 py-0 px-3 hover:bg-[#453F29]/20 ">
-                <span class="opacity-50">$</span>
-                <span class="text-sm md:text-xs font-light uppercase">CAD</span>
-              </button>
-              <button class="flex items-center gap-2 py-0 px-3 hover:bg-[#453F29]/20 ">
-                <span class="opacity-50">€</span>
-                <span class="text-sm md:text-xs font-light uppercase">Eur</span>
-              </button>
-              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 ">
-                <img src="~/assets/images/qatar-rial.png" alt="qatar rial" class="w-3 opacity-40">
-                <span class="text-sm md:text-xs font-light uppercase">QAR</span>
-              </button>
-              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 ">
-                <img src="~/assets/images/tether.png" alt="tether" class="w-3 opacity-40">
-                <span class="text-sm md:text-xs font-light uppercase">Tether</span>
-              </button>
-            </div>
-          </Transition>
-        </div>
         <!--  User Account  -->
         <NuxtLink to="/auth" class="opacity-0" data-aos="zoom-in" data-aos-delay="300" data-aos-once="true">
           <svg class="w-4 2xl:w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -81,9 +53,40 @@
           </svg>
         </button>
         <div class="relative">
+          <button @click="showCurrency = !showCurrency" class="text-xs p-1 2xl:px-3 2xl:py-2 flex items-center gap-2 opacity-0" data-aos="zoom-in" data-aos-delay="500" data-aos-once="true">
+            <span>USD</span>
+            <svg :class="['w-2 2xl:w-3 transition-transform duration-200',{'-rotate-180':showCurrency}]" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.7">
+                <path d="M12.0416 1.72916L6.49998 7.27082L0.958313 1.72916" stroke="#493E17" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </g>
+            </svg>
+          </button>
+          <Transition name="slideDown">
+            <div v-if="showCurrency" v-click-outside="closeCurrency" class="absolute left-auto right-0 translate-y-2 w-max min-w-[100px] top-full flex flex-col gap-1 bg-[#FEFCF8] border border-[#453F29]/20 py-1">
+              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 ">
+                <img src="~/assets/images/countries/canada.png" alt="canada flag" class="w-5 object-cover aspect-square rounded-full">
+                <span class="text-sm md:text-xs font-light uppercase">CAD</span>
+              </button>
+              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 ">
+                <img src="~/assets/images/countries/eur.png" alt="canada flag" class="w-5 object-cover aspect-square rounded-full">
+                <span class="text-sm md:text-xs font-light uppercase">Eur</span>
+              </button>
+              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 ">
+                <img src="~/assets/images/countries/qatar.png" alt="canada flag" class="w-5 object-cover aspect-square rounded-full">
+                <span class="text-sm md:text-xs font-light uppercase">QAR</span>
+              </button>
+              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 ">
+                <img src="~/assets/images/countries/tether.png" alt="canada flag" class="w-5 object-cover aspect-square rounded-full">
+                <span class="text-sm md:text-xs font-light uppercase" title="Tether">USDT</span>
+              </button>
+            </div>
+          </Transition>
+        </div>
+        <div class="relative">
           <button @click="showLanguages = !showLanguages"
-                  class="hidden md:flex border rounded-full p-1 2xl:px-3 2xl:py-2 items-center gap-2 opacity-0" data-aos="zoom-in" data-aos-delay="600" data-aos-once="true">
-            <img src="~/assets/images/USA-Flag.png" alt="USA Flag" class="w-5 h-5 2xl:w-7 2xl:h-7 rounded-full ">
+                  class="hidden md:flex rounded-full p-1 2xl:px-3 2xl:py-2 items-center gap-2 opacity-0" data-aos="zoom-in" data-aos-delay="600" data-aos-once="true">
+<!--            <img src="~/assets/images/USA-Flag.png" alt="USA Flag" class="w-5 h-5 2xl:w-7 2xl:h-7 rounded-full ">-->
+            <span class="text-xs font-light pl-1">EN</span>
             <svg :class="['w-2 2xl:w-3 transition-transform duration-200',{'-rotate-180':showLanguages}]" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g opacity="0.7">
                 <path d="M12.0416 1.72916L6.49998 7.27082L0.958313 1.72916" stroke="#493E17" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -92,21 +95,21 @@
           </button>
           <Transition name="slideDown">
             <div v-if="showLanguages" v-click-outside="closeLanguages" class="absolute left-auto right-0 translate-y-2 w-max top-full flex flex-col gap-1 bg-[#FEFCF8] rounded-xl border border-[#453F29]/20 p-2">
-              <button class="flex items-center gap-2 py-1 px-2 hover:bg-[#453F29]/20 rounded">
+              <button @click="setLocale('en')" class="flex items-center gap-2 py-1 px-2 hover:bg-[#453F29]/20 rounded">
                 <img src="~/assets/images/USA-Flag.png" alt="USA Flag" class="w-5 h-5 rounded-full ">
                 <span class="text-sm md:text-xs font-light uppercase">English</span>
               </button>
-              <button class="flex items-center gap-2 py-1 px-2 hover:bg-[#453F29]/20 rounded">
+              <button @click="setLocale('ar')" class="flex items-center gap-2 py-1 px-2 hover:bg-[#453F29]/20 rounded">
+                <img src="~/assets/images/USA-Flag.png" alt="USA Flag" class="w-5 h-5 rounded-full ">
+                <span class="text-sm md:text-xs font-light uppercase">Arabic</span>
+              </button>
+              <button @click="setLocale('fr')" class="flex items-center gap-2 py-1 px-2 hover:bg-[#453F29]/20 rounded">
                 <img src="~/assets/images/USA-Flag.png" alt="USA Flag" class="w-5 h-5 rounded-full ">
                 <span class="text-sm md:text-xs font-light uppercase">French</span>
               </button>
-              <button class="flex items-center gap-2 py-1 px-2 hover:bg-[#453F29]/20 rounded">
+              <button @click="setLocale('du')" class="flex items-center gap-2 py-1 px-2 hover:bg-[#453F29]/20 rounded">
                 <img src="~/assets/images/USA-Flag.png" alt="USA Flag" class="w-5 h-5 rounded-full ">
                 <span class="text-sm md:text-xs font-light uppercase">Dutch</span>
-              </button>
-              <button class="flex items-center gap-2 py-1 px-2 hover:bg-[#453F29]/20 rounded">
-                <img src="~/assets/images/USA-Flag.png" alt="USA Flag" class="w-5 h-5 rounded-full ">
-                <span class="text-sm md:text-xs font-light uppercase">Arabic</span>
               </button>
             </div>
           </Transition>
@@ -217,6 +220,8 @@ const showMobileNavbar = ref(false);
 const showLanguages = ref(false);
 const showCurrency = ref(false);
 const showCart = ref(false);
+
+const {locale,setLocale } = useI18n();
 
 const closeNavbar = ()=>{
   setTimeout(()=>{

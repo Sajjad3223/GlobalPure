@@ -16,16 +16,14 @@
     <div class="absolute inset-0 bg-black/40"></div>
     <div class="relative gap-4 md:gap-10 w-full md:w-2/3 flex flex-col items-center justify-center text-center">
       <h1 class="text-3xl text-white md:text-7xl font-modern capitalize opacity-0" data-aos="fade-up">
-        Indulge the luxury of our <br>
-        premium saffron.
+        {{ $t('indexHeader') }}
       </h1>
       <span class="max-w-[90%] capitalize text-white text-xs sm:text-sm md:text-xl font-light opacity-0" data-aos="zoom-in" data-aos-delay="200">
-        Our premium saffron is a result of the delicate handpicking process and strict quality
-        control measures that ensure only the best strands are selected.
+        {{ $t('indexSubHeader') }}
       </span>
       <div class="mt-10 opacity-0" data-aos="fade-down" data-aos-delay="400">
         <NuxtLink to="/shop" class="text-lg py-3 px-9 border border-white hover:bg-white text-white hover:text-black font-modern transition-all duration-300">
-          Shop Now
+          {{ $t('shop_now') }}
         </NuxtLink>
       </div>
     </div>
