@@ -47,9 +47,9 @@
           <a href="mailto:info@globalpuretrading.com">info@globalpuretrading.com</a>
         </div>
       </div>
-      <div class="flex flex-col gap-5">
+      <div class="flex flex-col items-center gap-5">
         <span class="font-modern text-3xl flex-1">Follow Us</span>
-        <div class="flex flex-col items-center text-sm font-light gap-4">
+        <div class="grid grid-cols-2 text-sm font-light gap-x-8 gap-y-4 capitalize">
           <a href="#">facebook</a>
           <a href="#">youtube</a>
           <a href="#">instagram</a>

@@ -3,16 +3,23 @@
   <Head>
     <Title>Dashboard | Premium Saffron</Title>
   </Head>
-  <div class="flex w-max mx-auto relative z-[1] flex-col items-center text-[#504A33]">
+  <div class="flex md:w-max mx-auto relative z-[1] flex-row md:flex-col items-center justify-center text-[#504A33]">
     <h2 class="text-4xl md:text-7xl font-modern" data-aos="fade-up">Dashboard</h2>
-    <svg class="absolute md:top-[60%] -right-[75%] scale-50 md:scale-100 origin-left md:origin-center md:-right-[25%] rotate-[20deg]" width="73" height="55" viewBox="0 0 73 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <button class="md:hidden absolute left-0">
+      <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g opacity="0.7">
+          <path d="M8.5 15L1.5 8L8.5 1" stroke="#504A33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </svg>
+    </button>
+    <svg class="hidden md:block absolute md:top-[60%] -right-[75%] scale-50 md:scale-100 origin-left md:origin-center md:-right-[25%] rotate-[20deg]" width="73" height="55" viewBox="0 0 73 55" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M71.9382 1.31903C30.1076 45.3597 -27.9309 -0.954034 18.06 1.40905C64.0509 3.77213 40.9978 45.2283 2.28287 53.8513" stroke="#493E17" stroke-dasharray="8 8"/>
     </svg>
-    <img src="~/assets/images/saffron-flower.png" alt="saffron flower" class="absolute md:-top-[80%] -top-[150%] -right-[110%] md:-right-[60%] w-[150px] move"/>
+    <img src="~/assets/images/saffron-flower.png" alt="saffron flower" class="hidden md:block absolute md:-top-[80%] -top-[150%] -right-[110%] md:-right-[60%] w-[150px] move"/>
   </div>
 
   <div class="flex items-stretch gap-4 mt-10">
-    <div class="w-1/4 border border-[#453F29]/50 py-6 flex flex-col items-stretch justify-between">
+    <div class="hidden md:flex w-1/4 border border-[#453F29]/50 py-6 flex-col items-stretch justify-between">
       <ul>
         <li>
           <NuxtLink to="/profile/dashboard" class="px-8 py-3 hover:bg-[#F0E9D8] flex items-center gap-3 opacity-70" exact-active-class="activePanel">
@@ -76,10 +83,10 @@
         </button>
       </div>
     </div>
-    <div class="flex-1 border border-[#453F29]/50 p-6">
-      <div class="flex items-stretch gap-4">
-        <div class="w-3/4 grid grid-cols-3 gap-4 gap-y-10">
-          <div class="border border-[#453F29]/10 flex p-6 h-max flex-col items-start justify-center">
+    <div class="flex-1 md:border border-[#453F29]/50 md:p-6">
+      <div class="flex flex-col md:flex-row items-stretch gap-4">
+        <div class="w-full md:w-3/4 flex flex-col md:grid md:grid-cols-3 gap-4 md:gap-y-10">
+          <div class="border border-[#453F29]/10 flex p-6 h-max md:flex-col items-start justify-center">
             <div class="flex items-center gap-4">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 6V12.8571L16.4571 15.0857" stroke="#504A33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -100,7 +107,7 @@
               </div>
             </div>
           </div>
-          <div class="border border-[#453F29]/10 flex p-6 h-max flex-col items-start justify-center">
+          <div class="border border-[#453F29]/10 flex p-6 h-max md:flex-col items-start justify-center">
             <div class="flex items-center gap-4">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M17.1431 6.00028V19.7146C17.1431 20.6238 16.7819 21.4959 16.1389 22.1389C15.4959 22.7819 14.6239 23.1431 13.7146 23.1431H0.857422C1.76673 23.1431 2.6388 22.7819 3.28178 22.1389C3.92478 21.4959 4.28599 20.6238 4.28599 19.7146V4.28599C4.28599 3.37668 4.64721 2.50461 5.2902 1.86163C5.93318 1.21865 6.80526 0.857422 7.71456 0.857422H20.1431" stroke="#504A33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -125,7 +132,7 @@
               </div>
             </div>
           </div>
-          <div class="border border-[#453F29]/10 flex p-6 h-max flex-col items-start justify-center">
+          <div class="border border-[#453F29]/10 flex p-6 h-max md:flex-col items-start justify-center">
             <div class="flex items-center gap-4">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M10.2852 22.7148H13.7137" stroke="#504A33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -148,8 +155,8 @@
               </div>
             </div>
           </div>
-          <div class="col-span-full flex flex-col gap-4">
-            <span class="font-modern text-4xl">The Most Viewer Product</span>
+          <div class="md:col-span-full flex flex-col gap-4">
+            <span class="font-modern text-2xl md:text-4xl">The Most Viewer Product</span>
             <hr class="border-[#504A33]/10">
             <div class="w-full h-32 flex items-center bg-[#46AEAE]/20 rounded-lg justify-center">
               <span>The Chart</span>
@@ -159,23 +166,27 @@
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-6">
                   <div class="w-4 h-4 rotate-45 bg-[#FFC224] border border-[#453F29]"></div>
-                  <span class="capitalize opacity-50">luxury box Saffron Cut Filaments</span>
-                  <span class="capitalize opacity-50 font-light">total (987 view)</span>
+                  <div class="flex flex-col md:flex-row md:items-center md:gap-6">
+                    <span class="capitalize text-xs md:text-base opacity-50">luxury box Saffron Cut Filaments</span>
+                    <span class="capitalize text-xs md:text-base opacity-50 font-light">total (987 view)</span>
+                  </div>
                 </div>
                 <span class="text-[#46AEAE] underline underline-offset-4">View</span>
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-6">
                   <div class="w-4 h-4 rotate-45 bg-[#8B7526] border border-[#453F29]"></div>
-                  <span class="capitalize opacity-50">pocket pack Saffron Cut Filaments</span>
-                  <span class="capitalize opacity-50 font-light">total (932 view)</span>
+                  <div class="flex flex-col md:flex-row md:items-center md:gap-6">
+                    <span class="capitalize text-xs md:text-base opacity-50">pocket pack Saffron Cut Filaments</span>
+                    <span class="capitalize text-xs md:text-base opacity-50 font-light">total (932 view)</span>
+                  </div>
                 </div>
                 <span class="text-[#46AEAE] underline underline-offset-4">View</span>
               </div>
             </div>
           </div>
         </div>
-        <div dir="ltr" class="w-1/4 border border-[#453F29]/10 flex p-6 flex-col gap-4">
+        <div dir="ltr" class="w-full md:w-1/4 border border-[#453F29]/10 flex p-6 flex-col gap-4">
           <span class="capitalize font-light opacity-60">the price of product</span>
           <svg class="w-full" viewBox="0 0 186 89" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M0.5 56.5L19 33L37.5 45L57.5 27H71L89.5 1L126.5 43L145 23.5L168 33L185.5 13" stroke="#35D66B"/>

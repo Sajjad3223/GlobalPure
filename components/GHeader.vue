@@ -39,10 +39,6 @@
             <div v-if="showCurrency" v-click-outside="closeCurrency" class="absolute left-auto right-0 translate-y-2 w-max top-full flex flex-col gap-1 bg-[#FEFCF8] border border-[#453F29]/20 py-1">
               <button class="flex items-center gap-2 py-0 px-3 hover:bg-[#453F29]/20 ">
                 <span class="opacity-50">$</span>
-                <span class="text-sm md:text-xs font-light uppercase">USD</span>
-              </button>
-              <button class="flex items-center gap-2 py-0 px-3 hover:bg-[#453F29]/20 ">
-                <span class="opacity-50">$</span>
                 <span class="text-sm md:text-xs font-light uppercase">CAD</span>
               </button>
               <button class="flex items-center gap-2 py-0 px-3 hover:bg-[#453F29]/20 ">

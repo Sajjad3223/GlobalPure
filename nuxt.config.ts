@@ -10,7 +10,7 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  modules: ["@nuxtjs/google-fonts", "nuxt-aos"],
+  modules: ["@nuxtjs/google-fonts", "nuxt-aos", "@pinia/nuxt", "@nuxtjs/i18n"],
   googleFonts:{
     download:true,
     families:{
@@ -20,5 +20,9 @@ export default defineNuxtConfig({
   aos:{
     once: true,
     duration:500,
+  },
+  i18n:{
+    vueI18n: './i18n.config.ts',
+
   }
 })
