@@ -27,8 +27,15 @@
             <h3 class="text-3xl md:text-5xl font-modern" data-aos="fade-right">Location</h3>
           </div>
           <div class="flex flex-col gap-1 text-sm md:text-2xl items-center md:items-start md:ml-12 mt-4">
-            <span data-aos="fade-down" data-aos-delay="400">Rue Vanderkindere 238</span>
-            <span data-aos="fade-down" data-aos-delay="600">1180 Uccle</span>
+            <span data-aos="fade-down" data-aos-delay="400">
+              Unit 1416, wing 1, level 4, building 1, street 504, zone 49, business & innovation Park, ras bufontas, free zone
+            </span>
+            <span data-aos="fade-down" data-aos-delay="400">
+              Doha,Qatar
+            </span>
+            <span data-aos="fade-down" data-aos-delay="600">
+              Tel: +97433817777
+            </span>
             <span data-aos="fade-down" data-aos-delay="800">info@GlobalPureTrading.com</span>
           </div>
         </div>
@@ -42,9 +49,7 @@
             <h3 class="text-3xl md:text-5xl font-modern" data-aos="fade-right">Opening Hours</h3>
           </div>
           <div class="flex flex-col gap-1 text-sm md:text-2xl items-center md:items-start md:ml-12 mt-4">
-            <span data-aos="fade-down" data-aos-delay="400">Mon - Fri 9:00 am – 5:00 pm</span>
-            <span data-aos="fade-down" data-aos-delay="600">Saturday 9:00 am – 2:00 pm</span>
-            <span data-aos="fade-down" data-aos-delay="800">Sunday 9:00 am – 2:00 pm</span>
+            <span data-aos="fade-down" data-aos-delay="200">Sunday 8:00 AM – 2:00 PM</span>
           </div>
         </div>
       </div>

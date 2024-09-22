@@ -8,9 +8,7 @@
       <div class="flex transition-transform duration-1000" ref="imagesContainer" :style="{transform:`translateX(${-100 * currentImage}%)`}">
         <img src="/public/images/landing-bg.png" alt="landing" class="h-full object-cover w-screen shrink-0">
         <img src="/public/images/landing-bg2.png" alt="landing" class="h-full object-cover w-screen shrink-0">
-        <img src="/public/images/landing-bg3.png" alt="landing" class="h-full object-cover w-screen shrink-0">
         <img src="/public/images/landing-bg4.png" alt="landing" class="h-full object-cover w-screen shrink-0">
-        <img src="/public/images/landing-bg5.png" alt="landing" class="h-full object-cover w-screen shrink-0">
       </div>
     </div>
     <div class="absolute inset-0 bg-black/40"></div>
