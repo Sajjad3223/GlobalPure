@@ -19,20 +19,20 @@
             authStep == 'signup' ? 'left-1/4' : 'left-3/4']"></div>
           </div>
         </div>
-        <form action="" class="flex flex-col w-full gap-6" v-if="authStep == 'signup'">
-          <BaseGInput name="name" label="Name" type="text" placeholder="Enter Your Name" required v-model="signupCommand.name" />
+        <form @submit.prevent="SignUp" class="flex flex-col w-full gap-6" v-if="authStep == 'signup'">
+          <BaseGInput name="name" label="Name" type="text" placeholder="Enter Your Name" required v-model="signupCommand.firstName" />
           <BaseGInput name="email" label="Email" type="email" placeholder="your@gmail.com" required v-model="signupCommand.email" />
           <BaseGInput name="password" label="Password" type="password" placeholder="Create a password" required v-model="signupCommand.password" />
-          <BaseGButton>SIGN UP</BaseGButton>
+          <BaseGButton type="submit">SIGN UP</BaseGButton>
         </form>
-        <form action="" class="flex flex-col w-full gap-6" v-else>
-          <BaseGInput name="email" label="Email" type="email" placeholder="your@gmail.com" required v-model="signupCommand.email" />
+        <form @submit.prevent="Login" class="flex flex-col w-full gap-6" v-else>
+          <BaseGInput name="email" label="Email" type="email" placeholder="your@gmail.com" required v-model="loginCommand.email" />
           <div class="flex flex-col gap-2">
-            <BaseGInput name="password" label="Password" type="password" placeholder="Create a password" required v-model="signupCommand.password" />
+            <BaseGInput name="password" label="Password" type="password" placeholder="Create a password" required v-model="loginCommand.password" />
             <a href="#" class="text-xs md:text-sm font-light underline underline-offset-4">Forget Password?</a>
           </div>
           <BaseGCheckbox name="rememberMe" placeholder="Remember Me" label="Remember Me"/>
-          <BaseGButton>LOG IN</BaseGButton>
+          <BaseGButton type="submit">LOG IN</BaseGButton>
         </form>
         <div class="flex flex-col items-center gap-4 w-full">
           <span>OR</span>
@@ -68,14 +68,43 @@
 </template>
 
 <script setup lang="ts">
+import type {LoginCommand, RegisterCommand} from "~/models/users/userCommands";
+import {LoginUser, RegisterUser} from "~/services/user.service";
+import {useToast} from "~/composables/useToast";
+
 definePageMeta({
   layout:false
 })
 
 const authStep:Ref<'signup' | 'login'> = ref('signup');
-const signupCommand = reactive({
-  name:'',
+const signupCommand:RegisterCommand = reactive({
+  firstName:'',
   email:'',
   password:''
 })
+const loginCommand:LoginCommand = reactive({
+  email:'',
+  password:''
+})
+
+const authStore = useAuthStore();
+const toast = useToast();
+const SignUp = async ()=>{
+  const result = await RegisterUser(signupCommand);
+  if(result.isSuccess){
+    await authStore.setToken({token:result.data!});
+    toast.showToast(result.metaData.message);
+  }else{
+    toast.showError(result.metaData);
+  }
+}
+const Login = async ()=>{
+  const result = await LoginUser(loginCommand);
+  if(result.isSuccess){
+    await authStore.setToken({token:result.data!});
+    toast.showToast(result.metaData.message);
+  }else{
+    toast.showError(result.metaData);
+  }
+}
 </script>

@@ -29,7 +29,7 @@
       </ul>
       <div class="flex items-center gap-4 2xl:gap-6">
         <!--  User Account  -->
-        <NuxtLink to="/auth" class="opacity-0" data-aos="zoom-in" data-aos-delay="300" data-aos-once="true">
+        <NuxtLink :to="authStore.isLoggedIn ? '/profile' : '/auth'" class="opacity-0" data-aos="zoom-in" data-aos-delay="300" data-aos-once="true">
           <svg class="w-4 2xl:w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12.0006 13.715C14.3675 13.715 16.2863 11.7962 16.2863 9.42927C16.2863 7.06234 14.3675 5.14355 12.0006 5.14355C9.63363 5.14355 7.71484 7.06234 7.71484 9.42927C7.71484 11.7962 9.63363 13.715 12.0006 13.715Z" stroke="#504A33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M4.67969 20.4001C5.44467 19.1444 6.51982 18.1065 7.80176 17.3865C9.0837 16.6663 10.5293 16.2881 11.9997 16.2881C13.47 16.2881 14.9157 16.6663 16.1976 17.3865C17.4796 18.1065 18.5546 19.1444 19.3197 20.4001" stroke="#504A33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -247,6 +247,8 @@ const closeCart = ()=>{
       showCart.value = false;
   },100);
 }
+
+const authStore = useAuthStore();
 </script>
 
 <style>

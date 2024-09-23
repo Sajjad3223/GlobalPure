@@ -73,7 +73,7 @@
       </ul>
       <div class="flex flex-col gap-3">
         <hr class="mx-8">
-        <button class="px-8 py-3 hover:bg-[#F0E9D8] flex items-center gap-3">
+        <button @click="LogOut" class="px-8 py-3 hover:bg-[#F0E9D8] flex items-center gap-3">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M11.858 12.9999V15.2856C11.858 15.5887 11.7376 15.8794 11.5232 16.0937C11.3089 16.308 11.0182 16.4284 10.7151 16.4284H2.71512C2.41201 16.4284 2.12133 16.308 1.907 16.0937C1.69267 15.8794 1.57227 15.5887 1.57227 15.2856V2.71415C1.57227 2.41104 1.69267 2.12035 1.907 1.90602C2.12133 1.6917 2.41201 1.57129 2.71512 1.57129H10.7151C11.0182 1.57129 11.3089 1.6917 11.5232 1.90602C11.7376 2.12035 11.858 2.41104 11.858 2.71415V4.99986" stroke="#453F29" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M8.42969 9H16.4297" stroke="#453F29" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -230,6 +230,11 @@
 definePageMeta({
   layout:'profile',
 })
+
+const authStore = useAuthStore();
+const LogOut = ()=>{
+  authStore.logOut();
+}
 </script>
 
 <style>
