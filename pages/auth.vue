@@ -25,14 +25,19 @@
           <BaseGInput name="password" label="Password" type="password" placeholder="Create a password" required v-model="signupCommand.password" />
           <BaseGButton type="submit">SIGN UP</BaseGButton>
         </form>
-        <form @submit.prevent="Login" class="flex flex-col w-full gap-6" v-else>
+        <form @submit.prevent="Login" class="flex flex-col w-full gap-6" v-else-if="authStep == 'login'">
           <BaseGInput name="email" label="Email" type="email" placeholder="your@gmail.com" required v-model="loginCommand.email" />
           <div class="flex flex-col gap-2">
             <BaseGInput name="password" label="Password" type="password" placeholder="Create a password" required v-model="loginCommand.password" />
-            <a href="#" class="text-xs md:text-sm font-light underline underline-offset-4">Forget Password?</a>
+            <button @click="authStep = 'forget'" class="text-xs md:text-sm font-light underline underline-offset-4">Forget Password?</button>
           </div>
           <BaseGCheckbox name="rememberMe" placeholder="Remember Me" label="Remember Me"/>
           <BaseGButton type="submit">LOG IN</BaseGButton>
+        </form>
+        <form @submit.prevent="ForgetPass" class="flex flex-col w-full gap-6" v-else>
+          <BaseGInput name="email" label="Email" type="email" placeholder="your@gmail.com" required v-model="forgetPassword.email" />
+          <button @click="authStep = 'login'" class="text-xs md:text-sm font-light underline underline-offset-4">Back to Login</button>
+          <BaseGButton type="submit">Send Code</BaseGButton>
         </form>
         <div class="flex flex-col items-center gap-4 w-full">
           <span>OR</span>
@@ -64,12 +69,51 @@
         <span class="text-white text-3xl">Trading</span>
       </NuxtLink>
     </div>
+    <Transition>
+      <div v-if="showConfirmModal" class="fixed bg-black/20 backdrop-blur-sm inset-0 flex items-center justify-center z-20 shadow-lg" @click.self="showConfirmModal = false">
+        <div class="w-1/3 bg-white flex flex-col p-5">
+          <h4 class="text-3xl font-black opacity-70">Verify Email</h4>
+          <span class="opacity-70 mt-2">A code has sent to your email</span>
+          <hr class="my-4">
+          <div class="flex items-center flex-col gap-5">
+            <div class="grid grid-cols-5 gap-4 w-3/4">
+              <input ref="otpInputs" type="text" v-for="i in 5" class="border rounded-md min-h-16 text-center text-xl" maxlength="1" @input="handleOtp" @keyup="handleOtpKeyup">
+            </div>
+            <div class="flex flex-col gap-2 items-center text-sm">
+              <span class="opacity-70">{{ `${Math.floor(timer / 60).toLocaleString('en-US',{minimumIntegerDigits:2})}:${(timer % 60).toLocaleString('en-US',{minimumIntegerDigits:2})}` }}</span>
+              <button @click="ForgetPass" class="disabled:opacity-50" :disabled="timer > 0">Resend Code</button>
+            </div>
+            <BaseGButton @click="ConfirmForgetPass">Confirm</BaseGButton>
+          </div>
+        </div>
+      </div>
+    </Transition>
+    <Transition>
+      <div v-if="showResetPasswordModal" class="fixed bg-black/20 backdrop-blur-sm inset-0 flex items-center justify-center z-20 shadow-lg">
+        <div class="w-1/3 bg-white flex flex-col p-5">
+          <h4 class="text-3xl font-black opacity-70">Reset Password</h4>
+          <span class="opacity-70 mt-2">Set a new password for your account</span>
+          <hr class="my-4">
+          <div class="flex items-center flex-col gap-5">
+            <BaseGInput label="New Password" v-model="resetPasswordCommand.newPassword"/>
+            <BaseGInput label="Confirm New Password" v-model="resetPasswordCommand.confirmNewPassword"/>
+            <BaseGButton @click="ResetPassword">Reset Password</BaseGButton>
+          </div>
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import type {LoginCommand, RegisterCommand} from "~/models/users/userCommands";
-import {LoginUser, RegisterUser} from "~/services/user.service";
+import type {LoginCommand, RegisterCommand, ResetPasswordCommand} from "~/models/users/userCommands";
+import {
+  ConfirmForgetPassword,
+  ForgetPassword,
+  LoginUser,
+  RegisterUser,
+  ResetUserPassword
+} from "~/services/user.service";
 import {useToast} from "~/composables/useToast";
 
 definePageMeta({
@@ -86,6 +130,12 @@ const loginCommand:LoginCommand = reactive({
   email:'',
   password:''
 })
+const forgetPassword = reactive({
+  email:''
+})
+
+const showConfirmModal = ref(false);
+const showResetPasswordModal = ref(false);
 
 const authStore = useAuthStore();
 const toast = useToast();
@@ -105,6 +155,77 @@ const Login = async ()=>{
     toast.showToast(result.metaData.message);
   }else{
     toast.showError(result.metaData);
+  }
+}
+
+const timer = ref(120);
+const ForgetPass = async ()=>{
+  const result = await ForgetPassword(forgetPassword.email);
+  if(result.isSuccess){
+    //toast.showToast(result.metaData.message);
+    showConfirmModal.value = true;
+    setInterval(()=>{
+      if(timer.value > 0)
+        timer.value--;
+    },1000)
+  }else{
+    toast.showError(result.metaData);
+  }
+}
+
+const otpInputs = ref([]);
+const handleOtp = (e)=>{
+  if(e.target.value != ''){
+    const next = e.target.nextElementSibling;
+    if(next){
+      next.focus();
+    }
+  }
+}
+const handleOtpKeyup = (e)=>{
+  if(e.key.toLowerCase() == 'backspace' || e.key.toLowerCase() == 'delete'){
+    e.target.value = '';
+    const prev = e.target.previousElementSibling;
+    if(prev){
+      prev.select();
+      prev.focus();
+    }
+  }
+}
+
+const resetPasswordCommand = reactive({
+  newPassword:'',
+  confirmNewPassword:'',
+})
+
+const resetToken:Ref<string | null> = ref(null);
+const ConfirmForgetPass = async ()=>{
+  let otpValue = '';
+  otpInputs.value.forEach(i=>{
+    otpValue += i.value;
+  })
+  const result = await ConfirmForgetPassword(otpValue,forgetPassword.email);
+  if(result.isSuccess){
+    resetToken.value = result.data!;
+    toast.showToast(result.metaData.message);
+    showConfirmModal.value = false;
+    showResetPasswordModal.value = true;
+  }else{
+    toast.showError(result.metaData);
+  }
+}
+
+const ResetPassword = async ()=>{
+  const result = await ResetUserPassword({
+    resetToken:resetToken.value,
+    newPassword:resetPasswordCommand.newPassword
+  } as ResetPasswordCommand);
+  if(result.isSuccess){
+    toast.showToast(result.metaData.message);
+    showResetPasswordModal.value = false;
+    authStep.value = 'login';
+  }else{
+    toast.showError(result.metaData)
   }
 }
 </script>

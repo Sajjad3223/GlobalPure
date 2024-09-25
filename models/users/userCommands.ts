@@ -11,15 +11,6 @@ export interface LoginCommand {
     password: string;
 }
 
-export interface CreateUserCommand {
-    firstName: string;
-    lastName: string;
-    nationalId: string;
-    phoneNumber: string;
-    email: string;
-    password: string;
-}
-
 export interface EditUserCommand {
     firstName: string;
     lastName: string;
@@ -29,6 +20,11 @@ export interface EditUserCommand {
 
 export interface ChangePasswordCommand {
     oldPassword: string;
+    newPassword: string;
+}
+
+export interface ResetPasswordCommand {
+    resetToken: string;
     newPassword: string;
 }
 
@@ -54,32 +50,4 @@ export interface EditUserAddressCommand {
     postCode: string;
     plaque: number;
     unit: number;
-}
-
-export interface AdminEditUserCommand {
-    userId: number;
-    firstName: string;
-    lastName: string;
-    nationalId: string;
-    phoneNumber: string;
-    email: string;
-    password: string;
-}
-
-export interface AdminSetUserRolesCommand {
-    userId: number;
-    roleIds: number[];
-}
-
-export interface AdminChargeWalletCommand {
-    userId: number;
-    amount: number;
-    description?:string;
-    walletType:EWalletType;
-}
-
-export interface AdminFinalizeWalletCommand {
-    userId: number;
-    walletId: number;
-    refCode: string;
 }

@@ -179,18 +179,10 @@
           <img src="~/assets/images/saffron.png" alt="saffron" class="w-[500px]">
           <div class="absolute inset-0 -z-[1] border border-[#504A33] rotate-6"></div>
         </div>
-        <form class="flex w-full md:w-2/3 flex-col gap-4 md:gap-6 font-inter ">
-          <div class="flex flex-col gap-3 opacity-0" data-aos="fade-up" data-aos-delay="300" data-aos-duration="500">
-            <label for="name">Name</label>
-            <input name="name" id="name" type="text" class="w-full border border-[#493E17] focus:outline-none p-4" placeholder="Your Name">
-          </div>
-          <div class="flex flex-col gap-3 opacity-0" data-aos="fade-up" data-aos-delay="600" data-aos-duration="500">
-            <label for="Email">Email</label>
-            <input name="Email" id="Email" type="text" class="w-full border border-[#493E17] focus:outline-none p-4" placeholder="example@test.com">
-          </div>
-          <button class="text-white bg-[#504A33] hover:bg-[#272315] transition-colors duration-300 text-xl w-full py-3 opacity-0" data-aos="fade-up" data-aos-delay="900" data-aos-duration="500">
-            Subscribe
-          </button>
+        <form @submit.prevent="subscribe" class="flex w-full md:w-2/3 flex-col gap-4 md:gap-6 font-inter ">
+          <BaseGInput label="Name" type="text" name="fullName" v-model="newsletterCommand.fullName" :required="false" placeholder="Your Name Here" data-aos="fade-up" data-aos-delay="300" data-aos-duration="500"/>
+          <BaseGInput label="Email" type="email" name="email" v-model="newsletterCommand.email" required placeholder="Your Email Here" data-aos="fade-up" data-aos-delay="400" data-aos-duration="500"/>
+          <BaseGButton type="submit">Subscribe</BaseGButton>
         </form>
       </div>
     </div>
@@ -199,6 +191,9 @@
 </template>
 
 <script setup lang="ts">
+
+import type {SubscribeNewsletterCommand} from "~/models/newsletter/subscribeCommand";
+import {SubscribeNewsletter} from "~/services/newsletter.service";
 
 const imagesContainer = ref(null);
 const imagesCount = ref(0);
@@ -213,6 +208,21 @@ const moveImages = ()=>{
   currentImage.value++;
   if(currentImage.value == (imagesCount.value))
     currentImage.value = 0;
+}
+
+const newsletterCommand:SubscribeNewsletterCommand = reactive({
+  fullName:'',
+  email:''
+})
+
+const toast = useToast();
+const subscribe = async ()=>{
+  const result = await SubscribeNewsletter(newsletterCommand);
+  if(result.isSuccess){
+    toast.showToast(result.metaData.message);
+  }else{
+    toast.showError(result.metaData);
+  }
 }
 
 </script>

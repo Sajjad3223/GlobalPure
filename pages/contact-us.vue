@@ -54,12 +54,12 @@
         </div>
       </div>
       <div class="w-full container mx-auto md:w-1/2 bg-[#FCF6E7] py-5 px-8 md:!p-20" data-aos="fade-left">
-        <form action="" class="flex flex-col gap-5">
+        <form @submit.prevent="sendForm" class="flex flex-col gap-5">
           <base-g-select data-aos="fade-down" data-aos-delay="200" label="Subject" name="subject" placeholder="Customer Services" required v-model="service" :options="serviceOptions"/>
           <base-g-input data-aos="fade-left" data-aos-delay="400" label="Email" name="email" placeholder="Your@Email.com" type="email" required v-model="email" />
-          <base-g-file data-aos="fade-right" data-aos-delay="600" label="Attach File" name="attach" v-model="attachFile" />
           <base-g-input data-aos="zoom-in" data-aos-delay="300" label="Message" name="message" placeholder="How Can We Help?" required v-model="message" multiline/>
-          <button data-aos="zoom-in" data-aos-delay="200" class="bg-[#504A33] w-full py-4 flex items-center justify-center">
+          <base-g-file data-aos="fade-right" data-aos-delay="600" label="Attach File" name="attach" v-model="attachFile"/>
+          <button type="submit" data-aos="zoom-in" data-aos-delay="200" class="bg-[#504A33] w-full py-4 flex items-center justify-center">
             <span class="text-white">Send</span>
           </button>
         </form>
@@ -79,15 +79,34 @@
 
 <script setup lang="ts">
 
+import {SendContactForm} from "~/services/contact.service";
+
 const email = ref(null);
 const message = ref(null);
 const service = ref(null);
 const attachFile = ref(null);
 const serviceOptions = [
-  {title:'Buy Issue',value:1},
-  {title:'Get Information',value:2},
-  {title:'Bug Report',value:3},
+  {title:'Buy Issue',value:'Buy Issue'},
+  {title:'Get Information',value:'Get Information'},
+  {title:'Bug Report',value:'Bug Report'},
 ]
+
+const toast = useToast();
+const sendForm = async ()=>{
+  const formData = new FormData();
+  formData.append('subject',service.value);
+  formData.append('email',email.value);
+  if(attachFile.value != null)
+    formData.append('attachFile',attachFile.value);
+  formData.append('message',message.value);
+
+  const result = await SendContactForm(formData);
+  if(result.isSuccess){
+    toast.showToast(result.metaData.message);
+  }else{
+    toast.showError(result.metaData);
+  }
+}
 
 </script>
 

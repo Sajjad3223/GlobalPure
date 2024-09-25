@@ -1,7 +1,19 @@
-import type {ChangePasswordCommand, EditUserCommand, LoginCommand, RegisterCommand} from "~/models/users/userCommands";
+import type {
+    ChangePasswordCommand,
+    EditUserCommand,
+    LoginCommand,
+    RegisterCommand,
+    ResetPasswordCommand
+} from "~/models/users/userCommands";
 import type {ApiResponse} from "~/models/apiResponse";
 import {FetchApi} from "~/utilities/CustomApiFetch";
+import type {UserDto} from "~/models/users/userDto";
 
+export const GetCurrentUser = ():Promise<ApiResponse<UserDto | null>> =>{
+    return FetchApi(`/user/current`,{
+        method:'GET',
+    });
+}
 export const RegisterUser = (command:RegisterCommand):Promise<ApiResponse<string>> =>{
     return FetchApi(`/user`,{
         method:'POST',
@@ -26,13 +38,36 @@ export const ChangePassword = (command:ChangePasswordCommand):Promise<ApiRespons
         body:command
     });
 }
+export const ForgetPassword = (email:string):Promise<ApiResponse<undefined>> =>{
+    return FetchApi(`/user/forget-password`,{
+        method:'PUT',
+        body:{
+            email
+        }
+    });
+}
+export const ConfirmForgetPassword = (code:string,email:string):Promise<ApiResponse<string>> =>{
+    return FetchApi(`/user/confirm-forget-password`,{
+        method:'PUT',
+        body:{
+            code,
+            email
+        }
+    });
+}
+export const ResetUserPassword = (command:ResetPasswordCommand):Promise<ApiResponse<undefined>> =>{
+    return FetchApi(`/user/reset-password`,{
+        method:'PUT',
+        body:command
+    });
+}
 export const GenerateEmailCode = ():Promise<ApiResponse<undefined>> =>{
     return FetchApi(`/user/generate-emailCode`,{
         method:'PUT'
     });
 }
 export const ConfirmEmail = (code:string):Promise<ApiResponse<undefined>> =>{
-    return FetchApi(`/user/email`,{
+    return FetchApi(`/user/confirm-email`,{
         method:'PUT',
         body:{
             code

@@ -2,7 +2,7 @@
   <div class="w-full flex flex-col gap-2">
     <label class="text-xl text-[#493E17]" :for="name">{{ label }}</label>
     <div class="relative flex items-center">
-      <select :name="name" :id="name" v-model="value" class="appearance-none w-full bg-[#FFFDF6] border border-[#493E17] px-4 py-2 2xl:py-4 focus:outline-none placeholder-[#493E17]/50 text-[#493E17]" :required="required">
+      <select :name="name" :id="name" v-model="value" @change="optionSelected" class="appearance-none w-full bg-[#FFFDF6] border border-[#493E17] px-4 py-2 2xl:py-4 focus:outline-none placeholder-[#493E17]/50 text-[#493E17]" :required="required">
         <option :value="null" selected>{{ placeholder }}</option>
         <option v-for="o in options" :value="o.value">{{ o.title }}</option>
       </select>
@@ -27,6 +27,12 @@ const props = defineProps<{
   required?:boolean,
 }>();
 
+const emits = defineEmits(['update:modelValue']);
+
 const value = ref(props.modelValue);
+
+const optionSelected = (e)=>{
+  emits('update:modelValue',e.target.value);
+}
 
 </script>

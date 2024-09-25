@@ -7,6 +7,17 @@
   </div>
 </template>
 
+<script setup lang="ts">
+
+const authStore = useAuthStore();
+const accountStore = useAccountStore();
+onMounted(async ()=>{
+  if(authStore.isLoggedIn)
+    await accountStore.initData();
+})
+
+</script>
+
 <style>
 body{
   @apply w-[100vw] overflow-x-hidden bg-[#FFFDF8];
