@@ -35,29 +35,28 @@
               <path d="M7.5 1.25L4 4.75L0.5 1.25" stroke="#E9B638" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </span>
-          <span class="font-semibold">$120.99</span>
+          <span class="font-semibold">{{cartStore.getTotalPrice}} {{getPriceUnitSymbol(globalStore.currentCurrency)}}</span>
         </button>
-        <div class="mt-4 transition-all duration-300" :style="{maxHeight:`${showDetails ? 410 : 0}px`}">
+        <div class="mt-4 transition-all duration-300" :style="{maxHeight:`${showDetails ? 450 : 0}px`}">
           <div class="flex pb-5 flex-col gap-4">
-            <ul class="flex flex-col gap-4 max-h-[220px] overflow-y-auto pr-4">
-              <li class="flex items-center justify-between" v-for="i in 2">
+            <ul class="flex flex-col gap-4 max-h-[220px] overflow-y-auto pr-4" v-if="!cartStore.cartLoading">
+              <li class="flex items-center justify-between" v-for="item in cartStore.PendingOrder?.orderItems" :key="item.id">
                 <div class="flex items-center gap-5">
                   <div class="flx grid place-items-center border rounded-lg bg-white max-w-[20%] aspect-square">
-                    <img src="~/assets/images/gp-product.png" alt="product" class="h-2/3">
+                    <img :src="`${SITE_URL}/product/images/${item.productData.image}`" :alt="item.productData.title" class="h-2/3">
                   </div>
                   <div class="flex flex-col gap-1">
-                    <span class="w-3/4 text-xs">Saffron In Cut Filaments Box Pack </span>
-                    <span class="font-light text-[10px] opacity-80">6Pes × 5gr</span>
+                    <span class="w-3/4 text-xs">{{ item.productData.title }}</span>
                   </div>
                 </div>
-                <span class="text-sm font-semibold">$120.99</span>
+                <span class="text-sm font-semibold text-nowrap">{{getPrice(item)}}</span>
               </li>
             </ul>
             <hr>
             <div class="flex flex-col gap-4 [&>div>span]:font-light [&>div>span]:text-sm opacity-80">
               <div class="flex items-center justify-between">
                 <span>Subtotal</span>
-                <span>$120.99</span>
+                <span>{{cartStore.getTotalPrice}} {{getPriceUnitSymbol(globalStore.currentCurrency)}}</span>
               </div>
               <div class="flex items-center justify-between">
                 <span>Discount</span>
@@ -75,8 +74,8 @@
                 <span class="text-xs font-light opacity-60">Including $2.99 in Taxes</span>
               </div>
               <div class="flex items-end gap-2">
-                <span class="font-light text-xs opacity-60">USD</span>
-                <span class="font-semibold">$120.99</span>
+                <span class="font-light text-xs opacity-60">{{ PriceUnit[globalStore.currentCurrency] }}</span>
+                <span class="font-semibold">{{cartStore.getTotalPrice}} {{getPriceUnitSymbol(globalStore.currentCurrency)}}</span>
               </div>
             </div>
           </div>
@@ -174,17 +173,16 @@
       </div>
       <div class="flex flex-col gap-5 md:gap-8">
         <ul class="flex flex-col gap-4 max-h-[220px] md:max-h-[450px] overflow-y-auto pr-4">
-          <li class="flex items-center justify-between" v-for="i in 2">
+          <li class="flex items-center justify-between" v-for="item in cartStore.PendingOrder?.orderItems" :key="item.id">
             <div class="flex items-center gap-5">
               <div class="flx grid place-items-center border rounded-lg bg-white max-w-[20%] md:max-w-[25%] aspect-square">
-                <img src="~/assets/images/gp-product.png" alt="product" class="h-2/3">
+                <img :src="`${SITE_URL}/product/images/${item.productData.image}`" alt="product" class="h-2/3">
               </div>
               <div class="flex flex-col gap-3">
-                <span class="w-3/4 text-xs md:text-xl">Saffron In Cut Filaments Box Pack </span>
-                <span class="font-light text-xs md:text-base">6Pes × 5gr</span>
+                <span class="w-3/4 text-xs md:text-xl">{{item.productData.title}}</span>
               </div>
             </div>
-            <span class="text-sm md:text-lg font-semibold">$120.99</span>
+            <span class="text-sm md:text-lg font-semibold">{{getPrice(item)}}</span>
           </li>
         </ul>
         <div class="flex items-center gap-3">
@@ -197,7 +195,7 @@
         <div class="flex flex-col gap-4 [&>div>span]:font-light [&>div>span]:text-sm md:[&>div>span]:text-base opacity-80">
           <div class="flex items-center justify-between">
             <span>Subtotal</span>
-            <span>$120.99</span>
+            <span>{{cartStore.getTotalPrice}} {{getPriceUnitSymbol(globalStore.currentCurrency)}}</span>
           </div>
           <div class="flex items-center justify-between">
             <span>Discount</span>
@@ -215,8 +213,8 @@
             <span class="text-xs md:text-sm font-light opacity-60">Including $2.99 in Taxes</span>
           </div>
           <div class="flex items-end gap-2">
-            <span class="font-light text-xs opacity-60">USD</span>
-            <span class="md:text-2xl font-semibold">$120.99</span>
+            <span class="font-light text-xs opacity-60">{{ PriceUnit[globalStore.currentCurrency] }}</span>
+            <span class="md:text-2xl font-semibold">{{cartStore.getTotalPrice}} {{getPriceUnitSymbol(globalStore.currentCurrency)}}</span>
           </div>
         </div>
         <BaseGButton class="md:hidden rounded-lg">
@@ -230,5 +228,22 @@
 </template>
 
 <script setup lang="ts">
+import {useGlobalStore} from "~/stores/global.store";
+import type {OrderItem} from "~/models/cart/orderData";
+import {getPriceUnitSymbol, PriceUnit} from "~/models/commonTypes";
+import {SITE_URL} from "~/utilities/api.config";
+
 const showDetails = ref(false);
+
+const cartStore = useCartStore();
+const globalStore = useGlobalStore();
+
+const getPrice = (item:OrderItem):string=>{
+  const price = item.prices.find(i=>i.unit == globalStore.currentCurrency)!;
+  return `${(price.amount * item.quantity).toFixed(2)}${getPriceUnitSymbol(price.unit)}`;
+}
+
+onMounted(async ()=>{
+  await cartStore.refreshCart();
+})
 </script>

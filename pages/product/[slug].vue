@@ -4,18 +4,18 @@
       <Title>Shop | Premium Saffron</Title>
     </Head>
 
-    <div >
+    <div v-if="!pending">
       <div class="flex flex-col md:flex-row items-stretch gap-5 md:gap-16">
         <div class="md:w-2/5 2xl:w-1/3 border border-[#453F29]/30 aspect-square flex items-center justify-center" data-aos="zoom-in">
-          <img src="~/assets/images/gp-product.png" alt="saffron glass" class="w-full" data-aos="fade-right" data-aos-delay="400">
+          <img :src="`${SITE_URL}/product/images/${product.mainImage}`" :alt="product.title" class="w-full" data-aos="fade-right" data-aos-delay="400">
         </div>
         <div class="w-1/12 hidden 2xl:block"></div>
         <div class="flex-1 flex flex-col">
           <div class="flex flex-col gap-4">
-            <span class="uppercase text-xs md:text-lg" data-aos="fade-down" data-aos-delay="400">SKU: SN50SH6</span>
-            <strong class="md:text-3xl" data-aos="fade-up">Saffron In Cut Filaments Box Pack 6Pes × 5gr</strong>
+            <span class="uppercase text-xs md:text-lg" data-aos="fade-down" data-aos-delay="400">SKU: {{ product.serial }}</span>
+            <strong class="md:text-3xl" data-aos="fade-up">{{ product.title }}</strong>
             <div class="flex items-center gap-4" >
-              <strong class="text-lg md:text-3xl" data-aos="fade-right" data-aos-delay="200">$120.99</strong>
+              <strong class="text-lg md:text-3xl" data-aos="fade-right" data-aos-delay="200">{{getPrice}}</strong>
               <span class="text-sm md:text-2xl font-light opacity-70" data-aos="fade-right" data-aos-delay="400">Tax Included</span>
             </div>
           </div>
@@ -41,7 +41,8 @@
               </div>
             </div>
             <div class="grid md:grid-cols-2 gap-4 mt-4">
-              <button class="text-white py-4 md:text-2xl bg-[#504A33] flex items-center justify-center gap-3" data-aos="zoom-in">
+              <button @click="cartStore.addToCart(product.id,product.slug,quantity)"
+                      class="text-white py-4 md:text-2xl bg-[#504A33] flex items-center justify-center gap-3" data-aos="zoom-in">
                 <svg class="w-4 md:w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M20.8836 12.8576H6.86077L5.14648 4.28613H22.2893C22.4148 4.2866 22.5384 4.31454 22.6519 4.36802C22.7652 4.42149 22.8655 4.4992 22.9455 4.59565C23.0257 4.69208 23.0837 4.80493 23.1154 4.9262C23.1471 5.04748 23.1519 5.17424 23.1293 5.29756L21.7236 12.1547C21.6908 12.353 21.588 12.5329 21.4339 12.6619C21.2797 12.7908 21.0845 12.8603 20.8836 12.8576Z" stroke="#FFFDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                   <path d="M5.14606 4.28599L4.42606 1.54314C4.38655 1.34953 4.28134 1.17552 4.12828 1.05057C3.97521 0.925613 3.78367 0.857381 3.58606 0.857422H0.860352" stroke="#FFFDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -57,7 +58,7 @@
               <button data-aos="fade-down" data-aos-delay="800"
                   class="hidden group relative col-span-full py-4 text-2xl border border-[#453F29]/20 hover:border-[#453F29] md:grid place-items-center gap-3 transition-all duration-500">
                 <span class="group-hover:opacity-0 group-hover:blur transition-all duration-500">Amazon Price</span>
-                <span class="absolute blur opacity-0 group-hover:opacity-100 group-hover:blur-0 transition-all duration-500">$130</span>
+                <span class="absolute blur opacity-0 group-hover:opacity-100 group-hover:blur-0 transition-all duration-500">{{ product.amazonPrice.amount }} {{getPriceUnitSymbol(product.amazonPrice.unit)}}</span>
               </button>
             </div>
             <div class="hidden md:flex w-full items-center justify-between mt-10">
@@ -91,31 +92,17 @@
             </div>
           </div>
           <hr class="border-[#453F29]/20">
-          <p class="text-xs md:text-lg text-justify font-light" data-aos="zoom-in" data-aos-delay="800">
-            Whether you're a professional chef in search of the finest saffron to elevate your culinary creations or a passionate amateur looking to add a touch of luxury to your homemade dishes, the Saffron In Cut Filaments Box Pack will meet your highest expectations. This product is presented in a box specially designed to preserve the freshness, purity, and unique aromas of saffron.
-            <br>
-            Saffron is a precious spice, often referred to as "red gold," due to its value and exceptional taste. It is prized for its enchanting aroma, vibrant color, and versatile use in the kitchen. Saffron adds an exquisite flavor to a variety of dishes, whether sweet or savory, and is also appreciated for its health benefits, including its antioxidant and anti-inflammatory properties.
-          </p>
+          <div v-html="product.description"></div>
         </div>
         <div class="w-1/12 hidden 2xl:block"></div>
         <div class="w-full md:w-auto flex-1 flex flex-col gap-4">
           <span class="md:text-2xl font-medium" data-aos="fade-right" data-aos-delay="200">Features</span>
           <hr class="border-[#453F29]/20">
           <div class="flex flex-col w-full">
-            <div data-aos="fade-right" data-aos-delay="400"
+            <div data-aos="fade-right" :data-aos-delay="i * 200" v-for="(f,i) in product.features"
                 class="w-full grid grid-cols-2 px-4 py-2 text-xs md:text-lg opacity-80 even:bg-[#F8F5ED]">
-              <span>Dimensions of packing</span>
-              <span>132x90x75 mm</span>
-            </div>
-            <div data-aos="fade-right" data-aos-delay="600"
-                class="w-full grid grid-cols-2 px-4 py-2 text-xs md:text-lg opacity-80 even:bg-[#F8F5ED]">
-              <span>EAN</span>
-              <span>0796554125237</span>
-            </div>
-            <div data-aos="fade-right" data-aos-delay="800"
-                class="w-full grid grid-cols-2 px-4 py-2 text-xs md:text-lg opacity-80 even:bg-[#F8F5ED]">
-              <span>Weight</span>
-              <span>30g</span>
+              <span>{{ f.key }}</span>
+              <span>{{ f.value }}</span>
             </div>
           </div>
         </div>
@@ -124,9 +111,39 @@
 
   </div>
 </template>
+
 <script setup lang="ts">
 
+import {useAsyncData} from "#app";
+import {GetProductBySlug} from "~/services/product.service";
+import {SITE_URL} from "~/utilities/api.config";
+import type {ProductDto} from "~/models/products/productData";
+import {useGlobalStore} from "~/stores/global.store";
+import {getPriceUnitSymbol} from "~/models/commonTypes";
+
 const quantity = ref(1);
+const route = useRoute();
+const router = useRouter();
+const slug:string = route.params.slug;
+const {data,pending} = await useAsyncData(`GetProduct-${slug}`,()=>GetProductBySlug(slug));
+if(!data.value?.isSuccess){
+  if(process.server){
+    throw createError("404 not found");
+  }else{
+    router.push('/shop');
+  }
+}
+
+const cartStore = useCartStore();
+
+const product:Ref<ProductDto> = ref(data.value!.data!);
+
+const globalStore = useGlobalStore();
+
+const getPrice = computed(()=>{
+  const price = product.value.prices.find(p=>p.price.unit == globalStore.currentCurrency)!.price;
+  return `${price.amount} ${getPriceUnitSymbol(price.unit)}`;
+})
 
 const decreaseQuantity = ()=>{
   if(quantity.value > 1) quantity.value--;

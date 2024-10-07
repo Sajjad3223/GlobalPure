@@ -27,32 +27,32 @@
         <span class="w-1/6 2xl:w-1/5 text-2xl">Price</span>
       </div>
       <hr class="w-full border-[#453F29] opacity-40 mt-4">
-      <div class="w-full flex items-center py-3 gap-5 relative border-b last:border-none" v-for="i in 3" :key="i">
-        <button class="absolute -left-5 2xl:-left-12">
+      <div class="w-full flex items-center py-3 gap-5 relative border-b last:border-none" v-if="!cartStore.cartLoading" v-for="(item,i) in cartStore.PendingOrder?.orderItems" :key="item.id">
+        <button class="absolute -left-5 2xl:-left-12" @click="cartStore.removeItem(item.id)">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M15.4294 0.571289L0.572266 15.4284" stroke="#504A33" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M0.572266 0.571289L15.4294 15.4284" stroke="#504A33" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
         <div class="flex-1 flex items-center">
-          <img src="~/assets/images/gp-product.png" alt="product" class="max-w-[120px] ">
-          <NuxtLink to="/shop/slug">
-            Saffron In Cut Filaments  6Pes × 5gr
+          <img :src="`${SITE_URL}/product/images/${item.productData.image}`" alt="product" class="max-w-[120px] ">
+          <NuxtLink :to="`/product/${item.productData.slug}`">
+            {{item.productData.title}}
           </NuxtLink>
         </div>
         <div class="w-1/6 2xl:w-1/5">Box pack</div>
         <div class="w-1/5 2xl:w-1/4">
           <div class="flex items-center gap-5">
-            <button data-aos="fade-right" data-aos-delay="400">
+            <button data-aos="fade-right" data-aos-delay="400" @click="cartStore.decreaseCount(item.id)">
               <svg class="w-3" width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M1.85742 12.9316H24.1431" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
             <div class="relative" data-aos="zoom-in" data-aos-delay="200">
-              <input type="number" class="w-9 h-9 grid place-items-center text-center bg-transparent" value="1" />
+              <input type="number" class="w-9 h-9 grid place-items-center text-center bg-transparent" :value="item.quantity" />
               <div class="absolute border border-[#453F29]/50 inset-1 rotate-45"></div>
             </div>
-            <button data-aos="fade-left" data-aos-delay="400">
+            <button data-aos="fade-left" data-aos-delay="400" @click="cartStore.increaseCount(item.id)">
               <svg class="w-3" width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M13 1.85742V24.1431" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M1.85742 12.9316H24.1431" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
@@ -60,14 +60,14 @@
             </button>
           </div>
         </div>
-        <div class="w-1/6 2xl:w-1/5">$120.99</div>
+        <div class="w-1/6 2xl:w-1/5">{{getPrice(item)}}</div>
       </div>
     </div>
     <div class="w-1/5 p-6 border border-[#453F29]/40 flex flex-col gap-4">
       <span class="font-modern text-3xl">Total Price</span>
       <div class="w-full flex items-center justify-between opacity-50">
-        <span>3 Item(s)</span>
-        <span>$327.97</span>
+        <span>{{cartStore.cartItemsCount}} Item(s)</span>
+        <span>{{cartStore.getTotalPrice}} {{getPriceUnitSymbol(globalStore.currentCurrency)}}</span>
       </div>
       <hr class="border-black/10">
       <div class="w-full flex items-center justify-between opacity-50">
@@ -76,7 +76,7 @@
       </div>
       <div class="w-full flex items-center justify-between">
         <span>TOTAL</span>
-        <span>$362.97</span>
+        <span>{{cartStore.getTotalPrice}} {{getPriceUnitSymbol(globalStore.currentCurrency)}}</span>
       </div>
       <NuxtLink to="/cart/shipping" class="mt-auto w-full text-center py-3 bg-[#504A33] text-white">Checkout</NuxtLink>
     </div>
@@ -163,5 +163,22 @@
 </template>
 
 <script setup lang="ts">
+import type {OrderItem} from "~/models/cart/orderData";
+import {getPriceUnitSymbol} from "~/models/commonTypes";
+import {useGlobalStore} from "~/stores/global.store";
+import {SITE_URL} from "~/utilities/api.config";
+
 const showDetails = ref(false);
+
+const cartStore = useCartStore();
+const globalStore = useGlobalStore();
+
+const getPrice = (item:OrderItem):string=>{
+  const price = item.prices.find(i=>i.unit == globalStore.currentCurrency)!;
+  return `${(price.amount * item.quantity).toFixed(2)} ${getPriceUnitSymbol(price.unit)}`;
+}
+
+onMounted(async ()=>{
+  await cartStore.refreshCart();
+})
 </script>

@@ -54,8 +54,16 @@
   </div>
   <hr class="border border-[#453F29] opacity-20">
   <!-- Products -->
-  <div class="relative grid grid-cols-2 md:grid-cols-4 gap-10 mt-10">
-    <GCard v-for="i in 8" data-aos="fade-left" :data-aos-delay="200 * i" />
+  <div class="relative grid grid-cols-2 md:grid-cols-4 gap-10 mt-10" v-if="!isLoading">
+    <GCard v-for="(p,i) in products" :product="p" :key="p.id" data-aos="fade-left" :data-aos-delay="200 * i" />
+  </div>
+  <div class="grid grid-cols-4 gap-10 mt-4" v-else>
+    <div class="w-full flex skeleton flex-col min-h-[400px] gap-4" v-for="i in 8" :data-aos-delay="200 * i">
+      <div class="skeleton-el w-full flex-1 rounded-lg"></div>
+      <div class="skeleton-el w-1/3 h-2 rounded-lg"></div>
+      <div class="skeleton-el w-full h-4 rounded-lg"></div>
+      <div class="skeleton-el w-2/3 h-5 rounded-lg"></div>
+    </div>
   </div>
   <!-- Pagination -->
   <div class="flex items-center justify-center pt-20">
@@ -91,10 +99,58 @@
 </template>
 <script setup lang="ts">
 import GRange from "~/components/base/GRange.vue";
+import {GetAllProducts} from "~/services/product.service";
+import {type ProductFilterData, type ProductFilterParams, SortBy, SortType} from "~/models/products/productData";
+import type {PaginationData} from "~/models/baseFilterResult";
+import {FillPaginationData} from "~/utilities/fillPaginationData";
 
 const showOrderBy = ref(false);
 const showPriceFilter = ref(false);
 
+const pageId = ref(1);
+
+const filterParams:ProductFilterParams = reactive({
+  pageId:pageId.value,
+  take:8,
+  search:undefined,
+  maxPrice:undefined,
+  minPrice:undefined,
+  sortBy:SortBy.Date,
+  sortType:SortType.Descending
+});
+
+/*const router = useRouter();
+const {data} = await useAsyncData("GetProducts",()=>GetAllProducts(filterParams));
+if(!data.value?.isSuccess){
+  if(process.server){
+    throw createError({statusCode:404,message:'Not Found'})
+  }else{
+    router.push('/');
+    toast.showToast('محصول مورد نظر یافت نشد');
+  }
+}*/
+const toast = useToast();
+const isLoading = ref(false);
+const products:Ref<ProductFilterData[]> = ref([]);
+const paginationData:Ref<PaginationData | null> = ref(null);
+
+onMounted( async ()=>{
+  await getData();
+})
+
+const getData = async ()=>{
+  isLoading.value = true;
+
+  const result = await GetAllProducts(filterParams);
+  if(result.isSuccess){
+    products.value = result.data?.data ?? [];
+    paginationData.value = FillPaginationData(result.data!);
+  }else{
+    toast.showError(result.metaData);
+  }
+
+  isLoading.value = false;
+}
 
 const closeOrderBy = ()=>{
   setTimeout(()=>{
@@ -109,3 +165,18 @@ const closePriceFilter = ()=>{
   },100);
 }
 </script>
+
+<style>
+.skeleton .skeleton-el{
+  background: #eee;
+  background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+  background-size: 200% 100%;
+  animation: 1.5s shine linear infinite;
+}
+
+@keyframes shine {
+  to{
+    background-position-x: -200%;
+  }
+}
+</style>

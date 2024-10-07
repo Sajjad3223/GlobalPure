@@ -43,7 +43,7 @@
           </svg>
         </button>
         <!--  Cart  -->
-        <button @click="showCart = !showCart" class="text-[#493E17] opacity-0" data-aos="zoom-in" data-aos-delay="500" data-aos-once="true">
+        <button @click="showCart = !showCart,getPendingOrder()" class="text-[#493E17] opacity-0" data-aos="zoom-in" data-aos-delay="500" data-aos-once="true">
           <svg class="w-5 md:w-4 2xl:w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M20.8831 12.8571H6.86028L5.146 4.28571H22.2888C22.4143 4.28617 22.5379 4.31411 22.6514 4.3676C22.7647 4.42107 22.865 4.49877 22.945 4.59522C23.0253 4.69165 23.0832 4.8045 23.1149 4.92577C23.1466 5.04705 23.1514 5.17381 23.1288 5.29713L21.7231 12.1543C21.6903 12.3525 21.5875 12.5325 21.4334 12.6614C21.2793 12.7904 21.084 12.8598 20.8831 12.8571Z" stroke="#493E17" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M5.146 4.28572L4.426 1.54286C4.38649 1.34926 4.28128 1.17525 4.12821 1.05029C3.97515 0.925338 3.78361 0.857106 3.586 0.857147H0.860291" stroke="#493E17" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -54,7 +54,7 @@
         </button>
         <div class="relative">
           <button @click="showCurrency = !showCurrency" class="text-xs p-1 2xl:px-3 2xl:py-2 flex items-center gap-2 opacity-0" data-aos="zoom-in" data-aos-delay="500" data-aos-once="true">
-            <span>USD</span>
+            <span>{{ PriceUnit[globalStore.currentCurrency] }}</span>
             <svg :class="['w-2 2xl:w-3 transition-transform duration-200',{'-rotate-180':showCurrency}]" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g opacity="0.7">
                 <path d="M12.0416 1.72916L6.49998 7.27082L0.958313 1.72916" stroke="#493E17" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -63,19 +63,23 @@
           </button>
           <Transition name="slideDown">
             <div v-if="showCurrency" v-click-outside="closeCurrency" class="absolute left-auto right-0 translate-y-2 w-max min-w-[100px] top-full flex flex-col gap-1 bg-[#FEFCF8] border border-[#453F29]/20 py-1">
-              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 ">
+              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 " @click="setCurrency(PriceUnit.USD)">
+                <img src="~/assets/images/USA-Flag.png" alt="canada flag" class="w-5 object-cover aspect-square rounded-full">
+                <span class="text-sm md:text-xs font-light uppercase">USD</span>
+              </button>
+              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 " @click="setCurrency(PriceUnit.CAD)">
                 <img src="~/assets/images/countries/canada.png" alt="canada flag" class="w-5 object-cover aspect-square rounded-full">
                 <span class="text-sm md:text-xs font-light uppercase">CAD</span>
               </button>
-              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 ">
+              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 " @click="setCurrency(PriceUnit.EUR)">
                 <img src="~/assets/images/countries/eur.png" alt="canada flag" class="w-5 object-cover aspect-square rounded-full">
                 <span class="text-sm md:text-xs font-light uppercase">Eur</span>
               </button>
-              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 ">
+              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 " @click="setCurrency(PriceUnit.QAR)">
                 <img src="~/assets/images/countries/qatar.png" alt="canada flag" class="w-5 object-cover aspect-square rounded-full">
                 <span class="text-sm md:text-xs font-light uppercase">QAR</span>
               </button>
-              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 ">
+              <button class="flex items-center gap-2 py-1 px-3 hover:bg-[#453F29]/20 " @click="setCurrency(PriceUnit.USDT)">
                 <img src="~/assets/images/countries/tether.png" alt="canada flag" class="w-5 object-cover aspect-square rounded-full">
                 <span class="text-sm md:text-xs font-light uppercase" title="Tether">USDT</span>
               </button>
@@ -177,17 +181,22 @@
           </button>
         </div>
         <ul class="flex flex-col items-center gap-5 flex-1 shrink-0 overflow-y-auto">
-          <li class="flex items-center w-full gap-4" v-for="i in 10">
-            <button>
+          <li class="flex items-center w-full gap-4" v-for="(item,index) in cartStore.PendingOrder?.orderItems">
+            <button @click="cartStore.removeItem(item.id)">
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M16.4294 1.57129L1.57227 16.4284" stroke="#504A33" stroke-linecap="round" stroke-linejoin="round"/>
                 <path d="M1.57227 1.57129L16.4294 16.4284" stroke="#504A33" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
-            <img src="~/assets/images/gp-product.png" alt="gp products" class="max-w-[100px]">
+            <div class="relative max-w-[100px]">
+              <img :src="`${SITE_URL}/product/images/${item.productData.image}`" alt="gp products" class="w-full">
+              <span v-if="item.quantity > 1" class="absolute text-xs font-bold w-5 left-0 top-0 aspect-square rounded-full bg-[#504A33]/20 text-[#504A33] grid place-items-center">
+                {{item.quantity}}
+              </span>
+            </div>
             <div class="flex flex-col gap-1">
-              <span class="text-xs md:text-base">Saffron In Cut Filaments Box Pack 6Pes × 5gr</span>
-              <strong class="text-sm md:text-lg">$120.99</strong>
+              <span class="text-xs md:text-base" :title="item.productData.title">{{ item.productData.title.substring(0,35) }}</span>
+              <strong class="text-sm md:text-lg">{{ getPrice(item) }}</strong>
             </div>
           </li>
         </ul>
@@ -195,8 +204,8 @@
         <hr class="w-full border-[#453F29]/20 mt-auto">
         <div class="w-full flex flex-col gap-3">
           <div class="flex items-center justify-between">
-            <span class="opacity-70">1 item</span>
-            <span class="opacity-70">$120.99</span>
+            <span class="opacity-70">{{ cartStore.cartItemsCount }} item</span>
+            <span class="opacity-70">{{ cartStore.getTotalPrice }} {{getPriceUnitSymbol(globalStore.currentCurrency)}}</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="opacity-70">Shipping</span>
@@ -204,7 +213,7 @@
           </div>
           <div class="flex items-center justify-between">
             <span>TOTAL</span>
-            <span>$120.99</span>
+            <span>{{ cartStore.getTotalPrice }} {{getPriceUnitSymbol(globalStore.currentCurrency)}}</span>
           </div>
         </div>
         <hr class="w-full border-[#453F29]/20">
@@ -216,10 +225,33 @@
 </template>
 
 <script setup lang="ts">
+import {getPriceUnitSymbol, PriceUnit} from "~/models/commonTypes";
+import {useGlobalStore} from "~/stores/global.store";
+import type {Order, OrderItem} from "~/models/cart/orderData";
+import {SITE_URL} from "~/utilities/api.config";
+
 const showMobileNavbar = ref(false);
 const showLanguages = ref(false);
 const showCurrency = ref(false);
 const showCart = ref(false);
+
+const globalStore = useGlobalStore();
+
+const setCurrency = (unit:PriceUnit)=>{
+  globalStore.setCurrency(unit);
+  showCurrency.value = false;
+}
+
+const cartStore = useCartStore();
+const getPendingOrder = async ():Promise<Order>=>{
+  await cartStore.refreshCart();
+  return cartStore.PendingOrder!;
+}
+
+const getPrice = (item:OrderItem):string=>{
+  const price = item.prices.find(i=>i.unit == globalStore.currentCurrency)!;
+  return `${(price.amount * item.quantity).toFixed(2)} ${getPriceUnitSymbol(price.unit)}`;
+}
 
 const {locale,setLocale } = useI18n();
 

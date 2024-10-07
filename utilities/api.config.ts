@@ -7,5 +7,5 @@ export const BASE_URL:string =  isProd ? apiProductionUrl : apiDevelopmentUrl;
 
 export const BLOGS_URL:string = "https://blog.gpsaffron.com";
 export const productionUrl:string = "https://api.gpsaffron.com";
-export const developmentUrl:string = "https://api.gpsaffron.com"; //"http://localhost:5000";
+export const developmentUrl:string = "http://localhost:5004"; //"http://localhost:5000";
 export const SITE_URL:string =  isProd ? productionUrl : developmentUrl;

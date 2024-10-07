@@ -91,9 +91,7 @@
         <button class="md:text-3xl font-modern opacity-0" data-aos="fade-up" data-aos-delay="200" data-aos-duration="500">See All</button>
       </div>
       <hr class="border-[#453F29]/50 mt-5 mb-10 opacity-0" data-aos="zoom-in">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
-        <GCard v-for="i in 4" data-aos="fade-left" :data-aos-delay="200 * i" />
-      </div>
+      <index-last-products />
     </div>
   </div>
   <div class="py-[100px] flex items-center justify-center">
