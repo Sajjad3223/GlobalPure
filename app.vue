@@ -1,4 +1,4 @@
-<template>
+7<template>
   <div>
     <NuxtLoadingIndicator/>
     <NuxtLayout>
@@ -8,6 +8,11 @@
 </template>
 
 <script setup lang="ts">
+import {GetSiteSettings} from "~/services/site.service";
+
+const globalStore = useGlobalStore();
+const {data} = await useAsyncData('GetSiteData',()=>GetSiteSettings());
+globalStore.siteSettings = data.value?.data ?? null;
 
 const authStore = useAuthStore();
 const accountStore = useAccountStore();

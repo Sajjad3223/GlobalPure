@@ -25,11 +25,31 @@
         </button>
         <Transition name="slideDown">
           <div v-if="showOrderBy" v-click-outside="closeOrderBy" class="absolute inset-x-0 right-auto top-full flex flex-col gap-1 bg-[#FEFCF8] border border-[#453F29] py-1">
-            <button class="flex items-center gap-2 py-2 px-4 hover:bg-[#453F29]/20 ">
+            <button @click="sortBy(SortBy.Date)" class="flex items-center gap-2 py-2 px-4 hover:bg-[#453F29]/20 disabled:bg-[#453F29]/20" :disabled="filterParams.sortBy == SortBy.Date">
               <span class="text-sm md:text-xs uppercase">Date</span>
             </button>
-            <button class="flex items-center gap-2 py-2 px-4 hover:bg-[#453F29]/20 ">
+            <button @click="sortBy(SortBy.Price)" class="flex items-center gap-2 py-2 px-4 hover:bg-[#453F29]/20 disabled:bg-[#453F29]/20" :disabled="filterParams.sortBy == SortBy.Price">
               <span class="text-sm md:text-xs uppercase">Price</span>
+            </button>
+          </div>
+        </Transition>
+      </div>
+      <div class="relative w-max py-5" data-aos="fade-left" data-aos-delay="200">
+        <button @click="showOrderType = !showOrderType" class="flex items-center gap-2">
+          <span>Sort Type</span>
+          <svg width="13" height="9" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g opacity="0.7">
+              <path d="M12.0413 1.72949L6.49967 7.27116L0.958008 1.72949" stroke="#504A33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </g>
+          </svg>
+        </button>
+        <Transition name="slideDown">
+          <div v-if="showOrderType" v-click-outside="closeOrderType" class="absolute inset-x-0 right-auto top-full flex flex-col gap-1 bg-[#FEFCF8] border border-[#453F29] py-1">
+            <button @click="sortType(SortType.Descending)" class="flex items-center gap-2 py-2 px-4 hover:bg-[#453F29]/20 disabled:bg-[#453F29]/20" :disabled="filterParams.sortType == SortType.Descending">
+              <span class="text-sm md:text-xs uppercase">Descending</span>
+            </button>
+            <button @click="sortType(SortType.Ascending)" class="flex items-center gap-2 py-2 px-4 hover:bg-[#453F29]/20 disabled:bg-[#453F29]/20" :disabled="filterParams.sortType == SortType.Ascending">
+              <span class="text-sm md:text-xs uppercase">Ascending</span>
             </button>
           </div>
         </Transition>
@@ -46,7 +66,7 @@
 
         <Transition name="slideDown">
           <div v-if="showPriceFilter" v-click-outside="closePriceFilter" class="absolute left-1/2 -translate-x-1/2 w-max min-w-[300px] p-6 right-auto top-full flex flex-col gap-1 bg-[#FEFCF8] border border-[#453F29]">
-            <GRange min="0" max="100" />
+            <GRange :min="0" :max="200" v-model="rangeValue" />
           </div>
         </Transition>
       </div>
@@ -105,7 +125,9 @@ import type {PaginationData} from "~/models/baseFilterResult";
 import {FillPaginationData} from "~/utilities/fillPaginationData";
 
 const showOrderBy = ref(false);
+const showOrderType = ref(false);
 const showPriceFilter = ref(false);
+const globalStore = useGlobalStore();
 
 const pageId = ref(1);
 
@@ -115,20 +137,13 @@ const filterParams:ProductFilterParams = reactive({
   search:undefined,
   maxPrice:undefined,
   minPrice:undefined,
+  unit:globalStore.currentCurrency,
   sortBy:SortBy.Date,
   sortType:SortType.Descending
 });
 
-/*const router = useRouter();
-const {data} = await useAsyncData("GetProducts",()=>GetAllProducts(filterParams));
-if(!data.value?.isSuccess){
-  if(process.server){
-    throw createError({statusCode:404,message:'Not Found'})
-  }else{
-    router.push('/');
-    toast.showToast('محصول مورد نظر یافت نشد');
-  }
-}*/
+const rangeValue = ref({minValue:0,maxValue:200})
+
 const toast = useToast();
 const isLoading = ref(false);
 const products:Ref<ProductFilterData[]> = ref([]);
@@ -138,9 +153,21 @@ onMounted( async ()=>{
   await getData();
 })
 
+const sortBy = async (type:SortBy)=>{
+  filterParams.sortBy = type;
+  await getData();
+  showOrderBy.value = false;
+}
+const sortType = async (type:SortType)=>{
+  filterParams.sortType = type;
+  await getData();
+  showOrderType.value = false;
+}
+
 const getData = async ()=>{
   isLoading.value = true;
-
+  filterParams.minPrice = rangeValue.value.minValue;
+  filterParams.maxPrice = rangeValue.value.maxValue;
   const result = await GetAllProducts(filterParams);
   if(result.isSuccess){
     products.value = result.data?.data ?? [];
@@ -158,7 +185,14 @@ const closeOrderBy = ()=>{
       showOrderBy.value = false;
   },100);
 }
-const closePriceFilter = ()=>{
+const closeOrderType = ()=>{
+  setTimeout(()=>{
+    if(showOrderType.value)
+      showOrderType.value = false;
+  },100);
+}
+const closePriceFilter = async ()=>{
+  await getData();
   setTimeout(()=>{
     if(showPriceFilter.value)
       showPriceFilter.value = false;

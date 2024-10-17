@@ -29,6 +29,11 @@ const emits = defineEmits(['update:modelValue']);
 
 const value:Ref<File | null> = ref(props.modelValue);
 
+watch(
+    ()=>props.modelValue,
+    ()=>value.value = props.modelValue
+)
+
 const fileSelected = (e)=>{
   value.value = e.target.files[0];
   emits('update:modelValue',value.value);

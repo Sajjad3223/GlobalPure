@@ -14,7 +14,7 @@ import {
 } from "~/models/cart/orderData";
 import {ToastType} from "~/composables/useToast";
 import {GetProductBySlug} from "~/services/product.service";
-import type {Price} from "~/models/commonTypes";
+import {type Price, PriceUnit} from "~/models/commonTypes";
 
 
 export const useCartStore = defineStore("cart", () => {
@@ -49,6 +49,13 @@ export const useCartStore = defineStore("cart", () => {
         return sum.toFixed(2);
     });
 
+    const getTotalPriceInUnit = (currency:PriceUnit)=>{
+        let prices = PendingOrder.value?.orderItems.map(i=>i.prices.find(p=>p.unit == currency)!.amount * i.quantity) ?? [0];
+        return [...prices].reduce((a,b)=>{
+            return a + b;
+        },0);
+    }
+
     const addToCart = async (id: number, slug: string, count: number = 1): Promise<boolean> => {
         let addResult = false;
         if (authStore.isLoggedIn) {
@@ -56,8 +63,9 @@ export const useCartStore = defineStore("cart", () => {
             const result = await AddToCart({productId:id,count});
             if (result.isSuccess) {
                 addResult = true;
+                toast.showToast(result.metaData.message)
             } else {
-                toast.showToast('در افزودن محصول به سبد خرید مشکلی پیش آمد', ToastType.error, 0);
+                toast.showToast(result.metaData.message, ToastType.error, 0);
             }
         } else {
             // If user is not logged in save items in cookie
@@ -86,7 +94,8 @@ export const useCartStore = defineStore("cart", () => {
                 cartCookie.value = cartData;
                 refreshCookie('g-cart');
                 addResult = true;
-            } else {
+            }
+            else {
                 const product = await GetProductBySlug(slug);
                 if (!product.isSuccess) {
                     toast.showToast('در افزودن محصول به سبد خرید مشکلی پیش آمد', ToastType.error, 0);
@@ -99,7 +108,7 @@ export const useCartStore = defineStore("cart", () => {
                             slug: product.data!.slug!,
                             id: product.data!.id!
                         },
-                        quantity: 1,
+                        quantity: count,
                         orderId: cartData.id,
                         creationDate: new Date(),
                         isActive:true,
@@ -210,9 +219,9 @@ export const useCartStore = defineStore("cart", () => {
 
                 cartCookie.value = cartData;
                 refreshCookie('g-cart');
-                await refreshCart();
             }
         }
+        await refreshCart();
     }
 
     const removeAllItems = async () => {
@@ -227,6 +236,15 @@ export const useCartStore = defineStore("cart", () => {
             }
         }
         await refreshCart();
+    }
+
+    const setOrderId = (id:number)=>{
+        let cartData: Order = getCartCookie();
+        if (cartData) {
+            cartData.id = id;
+            cartCookie.value = cartData;
+            refreshCookie('g-cart');
+        }
     }
 
     const setOrderDiscount = async (data: SetOrderDiscountCommand) => {
@@ -285,6 +303,7 @@ export const useCartStore = defineStore("cart", () => {
         refreshCart,
         PendingOrder,
         cartItemsCount,
+        setOrderId,
         cartLoading,
         increaseCount,
         decreaseCount,
@@ -297,5 +316,6 @@ export const useCartStore = defineStore("cart", () => {
         setOrderDiscount,
         removeDiscount,
         getTotalPrice,
+        getTotalPriceInUnit,
     };
 })

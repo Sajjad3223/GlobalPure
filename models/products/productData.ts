@@ -1,5 +1,5 @@
 import type {BaseDto} from "~/models/baseDto";
-import type {Price} from "~/models/commonTypes";
+import {type Price, PriceUnit} from "~/models/commonTypes";
 import type {BaseFilterParams} from "~/models/baseFilterParams";
 import type {BaseFilterResult} from "~/models/baseFilterResult";
 
@@ -16,8 +16,9 @@ export interface ProductFilterData extends BaseDto{
 }
 
 export interface ProductFilterParams extends BaseFilterParams{
-    minPrice?: Price | undefined | null;
-    maxPrice?: Price | undefined | null;
+    minPrice?: number | undefined | null;
+    maxPrice?: number | undefined | null;
+    unit?:PriceUnit | undefined | null;
     sortBy?: SortBy | undefined | null;
     sortType?: SortType | undefined | null;
 }
@@ -42,6 +43,7 @@ export interface ProductDto extends BaseDto{
     mainImage: string
     description: string
     category: Category
+    isInWishlist:boolean
     prices: ProductPrice[]
     features: ProductFeature[]
     images: ProductImage[]

@@ -1,6 +1,6 @@
 <template>
   <div class="relative w-full flex items-center">
-    <input :type="type" :name="name" :id="name" :required="required" placeholder=" ">
+    <input :type="type" :name="name" :id="name" :required="required" v-model="value" placeholder=" " @input="updateData">
     <label :for="name">
       {{ label }}
     </label>
@@ -18,7 +18,17 @@ const props = defineProps<{
   multiline?:boolean
 }>();
 
+const emits = defineEmits(['update:modelValue'])
 const value = ref(props.modelValue);
+
+watch(
+    ()=>props.modelValue,
+    ()=>value.value = props.modelValue
+)
+
+const updateData = (e)=>{
+  emits('update:modelValue',e.target.value);
+}
 
 </script>
 

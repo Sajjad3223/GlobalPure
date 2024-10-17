@@ -21,7 +21,7 @@
   <div class="flex flex-col md:flex-row items-start md:items-center gap-10 md:gap-20">
     <div class="w-full md:w-1/3 2xl:w-1/2">
       <div class="relative mx-auto 2xl:w-2/3">
-        <img src="~/assets/images/about-us.png" alt="about us" data-aos="fade-right" data-aos-delay="400"
+        <img :src="`${SITE_URL}/aboutus/${globalStore.siteSettings.aboutUsData.imageName}`" alt="about us banner" data-aos="fade-right" data-aos-delay="400"
              class="w-full mx-auto aspect-square object-cover object-right">
         <div class="absolute inset-0 -z-[1]" data-aos="zoom-in">
           <div class="border border-[#453F29] -z-[1] absolute inset-0 rotate-6"></div>
@@ -30,7 +30,7 @@
     </div>
     <div class="flex-1">
       <p class="text-sm md:text-2xl text-justify" data-aos="fade-left" data-aos-delay="800">
-        At Global Pure, we're committed to providing the finest saffron products to our customers while upholding the highest ethical standards. We work directly with farmers and suppliers around the world to ensure that our saffron is sustainably sourced and of the highest quality. Our team of experts is dedicated to the craft of saffron, and we're proud to offer our customers a range of products that reflects our commitment to excellence. As a company, we believe in transparency, honesty, and integrity, and we strive to build long-lasting relationships with our customers based on trust and mutual respect. We're constantly exploring new ways to innovate and improve, and we look forward to sharing our passion for saffron with you.
+        {{globalStore.siteSettings.aboutUsData.ourStory}}
       </p>
     </div>
   </div>
@@ -39,25 +39,25 @@
     <h3 class="font-modern text-4xl md:text-7xl" data-aos="fade-up">Our Values</h3>
     <div class="grid md:grid-cols-3 gap-14">
       <div class="bg-[#FCF6E7] relative md:aspect-square p-10 flex flex-col items-center gap-9" data-aos="fade-left" data-aos-delay="200">
-        <h4 class="text-3xl md:text-4xl font-modern" data-aos="fade-up" data-aos-delay="400">Quality</h4>
+        <h4 class="text-3xl md:text-4xl font-modern" data-aos="fade-up" data-aos-delay="400">{{ globalStore.siteSettings.aboutUsData.value1.title }}</h4>
         <p class="text-xs md:text-lg text-center" data-aos="fade-down" data-aos-delay="600">
-          At Global Pure, we're committed to providing our customers with the highest-quality saffron products. We carefully select each strand of saffron to ensure that it meets our rigorous standards for color, taste, and aroma.
+          {{globalStore.siteSettings.aboutUsData.value1.content}}
         </p>
-        <img src="~/assets/images/aboutus-quality.png" alt="quality" class="absolute right-0 bottom-0 w-1/3" data-aos="fade-left" data-aos-delay="800">
+        <img :src="`${SITE_URL}/aboutus/${globalStore.siteSettings.aboutUsData.value1.overlayImage}`" :alt="globalStore.siteSettings.aboutUsData.value1.title" class="absolute right-0 bottom-0 w-1/3" data-aos="fade-left" data-aos-delay="800">
       </div>
       <div class="bg-[#FCF6E7] relative md:aspect-square p-10 flex flex-col items-center gap-9" data-aos="fade-left" data-aos-delay="400">
-        <h4 class="text-3xl md:text-4xl font-modern" data-aos="fade-up" data-aos-delay="600">Sustainability</h4>
-        <p class="text-xs md:text-lg text-center" data-aos="fade-down" data-aos-delay="800">
-          We believe in responsible sourcing and are committed to supporting farmers and suppliers who use sustainable and ethical farming practices. Our saffron is sourced directly from farmers and suppliers around the world, and we work hard to build long-lasting relationships based on trust and respect.
+        <h4 class="text-3xl md:text-4xl font-modern" data-aos="fade-up" data-aos-delay="400">{{ globalStore.siteSettings.aboutUsData.value2.title }}</h4>
+        <p class="text-xs md:text-lg text-center" data-aos="fade-down" data-aos-delay="600">
+          {{globalStore.siteSettings.aboutUsData.value2.content}}
         </p>
-        <img src="~/assets/images/aboutus-sustainability.png" alt="sustainability" class="absolute right-0 bottom-0 w-1/3" data-aos="fade-left" data-aos-delay="1000">
+        <img :src="`${SITE_URL}/aboutus/${globalStore.siteSettings.aboutUsData.value2.overlayImage}`" :alt="globalStore.siteSettings.aboutUsData.value2.title" class="absolute right-0 bottom-0 w-1/3" data-aos="fade-left" data-aos-delay="800">
       </div>
       <div class="bg-[#FCF6E7] relative md:aspect-square p-10 flex flex-col items-center gap-9" data-aos="fade-left" data-aos-delay="600">
-        <h4 class="text-3xl md:text-4xl font-modern" data-aos="fade-up" data-aos-delay="800">Innovation</h4>
-        <p class="text-xs md:text-lg text-center" data-aos="fade-down" data-aos-delay="1000">
-          We're passionate about saffron and are constantly exploring new ways to innovate and improve our products. Our team of experts is dedicated to the craft of saffron and is always searching for new and exciting ways to incorporate this exotic spice into our customers' lives.
+        <h4 class="text-3xl md:text-4xl font-modern" data-aos="fade-up" data-aos-delay="400">{{ globalStore.siteSettings.aboutUsData.value3.title }}</h4>
+        <p class="text-xs md:text-lg text-center" data-aos="fade-down" data-aos-delay="600">
+          {{globalStore.siteSettings.aboutUsData.value3.content}}
         </p>
-        <img src="~/assets/images/aboutus-innovation.png" alt="innovation" class="absolute right-0 bottom-0 w-1/3" data-aos="fade-left" data-aos-delay="1200">
+        <img :src="`${SITE_URL}/aboutus/${globalStore.siteSettings.aboutUsData.value3.overlayImage}`" :alt="globalStore.siteSettings.aboutUsData.value3.title" class="absolute right-0 bottom-0 w-1/3" data-aos="fade-left" data-aos-delay="800">
       </div>
     </div>
   </div>
@@ -66,4 +66,9 @@
 </template>
 <script setup lang="ts">
 
+import {SITE_URL} from "~/utilities/api.config";
+
+const globalStore = useGlobalStore();
+
+console.log(globalStore.siteSettings)
 </script>

@@ -6,8 +6,13 @@
 
     <div v-if="!pending">
       <div class="flex flex-col md:flex-row items-stretch gap-5 md:gap-16">
-        <div class="md:w-2/5 2xl:w-1/3 border border-[#453F29]/30 aspect-square flex items-center justify-center" data-aos="zoom-in">
+        <div class="relative md:w-2/5 2xl:w-1/3 border border-[#453F29]/30 aspect-square flex items-center justify-center" data-aos="zoom-in">
           <img :src="`${SITE_URL}/product/images/${product.mainImage}`" :alt="product.title" class="w-full" data-aos="fade-right" data-aos-delay="400">
+          <button :class="['absolute left-4 top-4 z-[2]',{'favorite':product.isInWishlist}]" @click="toggleFavorite">
+            <svg class="pointer-events-none transition-all duration-300 w-4 2xl:w-6" viewBox="0 0 24 24" fill="transparent" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.1701 20.4129C12.9492 21.6223 11.0585 21.6223 9.83766 20.4129L2.55667 13.1992C-2.31418 8.32829 4.04629 -2.43337 12.0038 5.52419C19.9474 -2.41938 26.3079 8.34244 21.451 13.1992L14.1701 20.4129Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
         </div>
         <div class="w-1/12 hidden 2xl:block"></div>
         <div class="flex-1 flex flex-col">
@@ -41,7 +46,7 @@
               </div>
             </div>
             <div class="grid md:grid-cols-2 gap-4 mt-4">
-              <button @click="cartStore.addToCart(product.id,product.slug,quantity)"
+              <GButton @click="addCart" :is-loading="loading"
                       class="text-white py-4 md:text-2xl bg-[#504A33] flex items-center justify-center gap-3" data-aos="zoom-in">
                 <svg class="w-4 md:w-6" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M20.8836 12.8576H6.86077L5.14648 4.28613H22.2893C22.4148 4.2866 22.5384 4.31454 22.6519 4.36802C22.7652 4.42149 22.8655 4.4992 22.9455 4.59565C23.0257 4.69208 23.0837 4.80493 23.1154 4.9262C23.1471 5.04748 23.1519 5.17424 23.1293 5.29756L21.7236 12.1547C21.6908 12.353 21.588 12.5329 21.4339 12.6619C21.2797 12.7908 21.0845 12.8603 20.8836 12.8576Z" stroke="#FFFDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -51,10 +56,10 @@
                   <path d="M9.43136 23.143C8.95798 23.143 8.57422 22.7592 8.57422 22.2859C8.57422 21.8125 8.95798 21.4287 9.43136 21.4287C9.90474 21.4287 10.2885 21.8125 10.2885 22.2859C10.2885 22.7592 9.90474 23.143 9.43136 23.143Z" stroke="#FFFDF8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 <span class="text-current">Add To Cart</span>
-              </button>
-              <button class="md:text-2xl border py-4 border-[#453F29] items-center justify-center gap-3" data-aos="fade-right" data-aos-delay="400">
+              </GButton>
+              <GButton outline @click="buyNow" :is-loading="loading" class="md:text-2xl border py-4 border-[#453F29] items-center justify-center gap-3" data-aos="fade-right" data-aos-delay="400">
                 <span>Buy Now</span>
-              </button>
+              </GButton>
               <button data-aos="fade-down" data-aos-delay="800"
                   class="hidden group relative col-span-full py-4 text-2xl border border-[#453F29]/20 hover:border-[#453F29] md:grid place-items-center gap-3 transition-all duration-500">
                 <span class="group-hover:opacity-0 group-hover:blur transition-all duration-500">Amazon Price</span>
@@ -120,6 +125,8 @@ import {SITE_URL} from "~/utilities/api.config";
 import type {ProductDto} from "~/models/products/productData";
 import {useGlobalStore} from "~/stores/global.store";
 import {getPriceUnitSymbol} from "~/models/commonTypes";
+import {ToggleWishlist} from "~/services/user.service";
+import GButton from "~/components/base/GButton.vue";
 
 const quantity = ref(1);
 const route = useRoute();
@@ -152,4 +159,34 @@ const increaseQuantity = ()=>{
   if(quantity.value < 10) quantity.value++;
 }
 
+const loading = ref(false);
+const addCart = async ()=>{
+  loading.value = true;
+
+  await cartStore.addToCart(product.value.id,product.value.slug,quantity.value);
+
+  loading.value = false;
+}
+const buyNow = async ()=>{
+  loading.value = true;
+
+  cartStore.addToCart(product.value.id,product.value.slug,quantity.value).then(res=>{
+    if(res){
+      router.push('/cart/shipping');
+    }
+  });
+
+}
+
+const toggleFavorite = async (e) => {
+  e.target.classList.toggle('favorite');
+  const result = await ToggleWishlist(product.value.id);
+}
+
 </script>
+
+<style scoped>
+.favorite svg, .favorite path{
+  @apply fill-red-500 text-red-500;
+}
+</style>

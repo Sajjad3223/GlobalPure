@@ -1,21 +1,15 @@
 import type {BaseDto} from "~/models/baseDto";
-import type {RoleDto} from "~/models/role/roleQueries";
 import type {BaseFilterResult} from "~/models/baseFilterResult";
 import type {BaseFilterParams} from "~/models/baseFilterParams";
+import type {ProductData} from "~/models/cart/orderData";
 
 export interface UserDto extends BaseDto {
     firstName: string;
     lastName: string;
     fullName: string;
-    nationalId: string;
-    phoneNumber: string;
+    phoneNumber?: string | null;
     email: string;
-    avatar: string;
-    addresses: AddressDto[];
-    roles: RoleDto[];
-    wallets: WalletDto[];
     walletCash:number;
-    GPClubScore:number;
     isPhoneConfirmed:boolean;
     isEmailConfirmed:boolean;
 }
@@ -64,4 +58,9 @@ export interface WalletFilterResult extends BaseFilterResult<WalletDto>{
 export enum EWalletType {
     Deposit,
     Withdraw
+}
+
+export interface WishlistDto extends BaseDto{
+    userId:number;
+    wishlistProduct:ProductData;
 }

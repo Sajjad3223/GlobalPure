@@ -3,12 +3,10 @@
   <Head>
     <Title>Global Pure | Premium Saffron</Title>
   </Head>
-  <div class="relative z-0 w-full flex items-center justify-center h-[calc(100vh-90px)] md:h-[calc(100vh-100px)] " ><!--bg-[url(/images/landing-bg.png)]  bg-no-repeat bg-cover bg-bottom md:bg-top bg-fixed">-->
+  <div class="relative z-0 w-full flex items-center justify-center h-[calc(100vh-90px)] md:h-[calc(100vh-100px)] " >
     <div class="absolute inset-0 flex overflow-x-hidden">
       <div class="flex transition-transform duration-1000" ref="imagesContainer" :style="{transform:`translateX(${-100 * currentImage}%)`}">
-        <img src="/public/images/landing-bg.png" alt="landing" class="h-full object-cover w-screen shrink-0">
-        <img src="/public/images/landing-bg2.png" alt="landing" class="h-full object-cover w-screen shrink-0">
-        <img src="/public/images/landing-bg4.png" alt="landing" class="h-full object-cover w-screen shrink-0">
+        <img v-for="(banner,i) in globalStore.siteSettings.banners" :key="i" :src="`${SITE_URL}/banners/${banner.imageName}`" :alt="`banner${i}`" class="h-full object-cover w-screen shrink-0">
       </div>
     </div>
     <div class="absolute inset-0 bg-black/40"></div>
@@ -122,9 +120,11 @@
             A guide to cooking <br class="hidden md:block">
             with saffron
           </span>
-          <button class="md:text-2xl border border-[#453F29] hover:bg-[#453F29] text-[#504A33] py-3 md:py-5 px-9 hover:text-white w-max transition-colors duration-300 opacity-0" data-aos="fade-down" data-aos-delay="300" data-aos-duration="500">
-            View All
-          </button>
+          <div data-aos="fade-down" data-aos-delay="300" data-aos-duration="500">
+            <NuxtLink to="/recipes" class="md:text-2xl border border-[#453F29] hover:bg-[#453F29] text-[#504A33] py-3 md:py-5 px-9 hover:text-white w-max transition-colors duration-300">
+              View All
+            </NuxtLink>
+          </div>
         </div>
       </div>
     </div>
@@ -135,26 +135,11 @@
       <div class="relative">
         <div class="mt-20 flex flex-col md:flex-row gap-10 md:gap-20 overflow-x-auto px-5"
              style="scrollbar-width: none;">
-          <div class="flex flex-col gap-6 shrink-0 opacity-0" data-aos="fade-left" data-aos-delay="300" data-aos-duration="500">
-            <img src="~/assets/images/article1.png" alt="article1" class="w-full max-w-[500px] max-h-[500px] aspect-square">
-            <span class="text-2xl md:text-3xl text-[#504A33] font-modern">
-            Roasted Chicken, Corn, and <br>
-            Saffron Soup
-          </span>
-          </div>
-          <div class="flex flex-col gap-6 shrink-0 opacity-0" data-aos="fade-left" data-aos-delay="500" data-aos-duration="500">
-            <img src="~/assets/images/article2.png" alt="article2" class="w-full max-w-[500px] max-h-[500px] aspect-square">
-            <span class="text-2xl md:text-3xl text-[#504A33] font-modern">
-            Roasted Chicken, Corn, and <br>
-            Saffron Soup
-          </span>
-          </div>
-          <div class="flex flex-col gap-6 shrink-0 opacity-0" data-aos="fade-left" data-aos-delay="700" data-aos-duration="500">
-            <img src="~/assets/images/article3.png" alt="article3" class="w-full max-w-[500px] max-h-[500px] aspect-square">
-            <span class="text-2xl md:text-3xl text-[#504A33] font-modern">
-            Roasted Chicken, Corn, and <br>
-            Saffron Soup
-          </span>
+          <div v-for="(r,i) in lastRecipes" :key="r.id" class="flex flex-col gap-6 shrink-0 opacity-0" data-aos="fade-left" :data-aos-delay="200 * i" data-aos-duration="500">
+            <img :src="`${SITE_URL}/recipe/images/${r.imageName}`" :alt="r.title" class="w-full max-w-[500px] max-h-[500px] aspect-square object-cover">
+            <span class="text-2xl md:text-3xl text-[#504A33] font-modern max-w-[80%]">
+              {{r.title}}
+            </span>
           </div>
         </div>
       </div>
@@ -192,10 +177,23 @@
 
 import type {SubscribeNewsletterCommand} from "~/models/newsletter/subscribeCommand";
 import {SubscribeNewsletter} from "~/services/newsletter.service";
+import {SITE_URL} from "~/utilities/api.config";
+import type {RecipeFilterData} from "~/models/recipes/recipeModels";
+import {GetAllRecipes} from "~/services/recipe.service";
+
+const globalStore = useGlobalStore();
 
 const imagesContainer = ref(null);
 const imagesCount = ref(0);
 const currentImage = ref(0);
+
+const lastRecipes:Ref<RecipeFilterData[]> = ref([]);
+onMounted(async()=>{
+  const result = await GetAllRecipes({pageId:1,take:4});
+  if(result.isSuccess){
+    lastRecipes.value = result.data?.data ?? [];
+  }
+})
 
 onMounted(()=>{
   setInterval(moveImages,5000);
@@ -218,6 +216,8 @@ const subscribe = async ()=>{
   const result = await SubscribeNewsletter(newsletterCommand);
   if(result.isSuccess){
     toast.showToast(result.metaData.message);
+    newsletterCommand.fullName = '';
+    newsletterCommand.email = '';
   }else{
     toast.showError(result.metaData);
   }

@@ -37,11 +37,11 @@
           </svg>
         </NuxtLink>
         <!--  Favorites  -->
-        <button class="hidden md:block text-[#493E17] opacity-0" data-aos="zoom-in" data-aos-delay="400" data-aos-once="true">
+        <NuxtLink to="/profile/wishlist" v-if="authStore.isLoggedIn" class="hidden md:block text-[#493E17] opacity-0" data-aos="zoom-in" data-aos-delay="400" data-aos-once="true">
           <svg class="w-4 2xl:w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M14.1701 20.4129C12.9492 21.6223 11.0585 21.6223 9.83766 20.4129L2.55667 13.1992C-2.31418 8.32829 4.04629 -2.43337 12.0038 5.52419C19.9474 -2.41938 26.3079 8.34244 21.451 13.1992L14.1701 20.4129Z" stroke="#493E17" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-        </button>
+        </NuxtLink>
         <!--  Cart  -->
         <button @click="showCart = !showCart,getPendingOrder()" class="text-[#493E17] opacity-0" data-aos="zoom-in" data-aos-delay="500" data-aos-once="true">
           <svg class="w-5 md:w-4 2xl:w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

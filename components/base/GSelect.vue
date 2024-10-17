@@ -31,6 +31,11 @@ const emits = defineEmits(['update:modelValue']);
 
 const value = ref(props.modelValue);
 
+watch(
+    ()=>props.modelValue,
+    ()=>value.value = props.modelValue
+)
+
 const optionSelected = (e)=>{
   emits('update:modelValue',e.target.value);
 }

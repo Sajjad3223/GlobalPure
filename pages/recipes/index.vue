@@ -23,86 +23,39 @@
   </div>
 
   <!-- Recipes -->
-  <div class="relative flex flex-col md:grid grid-cols-3 gap-10 mt-10">
-    <div class="flex flex-col" data-aos="fade-up" data-aos-delay="200">
-      <img src="~/assets/images/article1.png" alt="recipes1" class="aspect-video object-bottom object-cover">
-      <span class="text-2xl md:text-3xl font-modern mt-5">Baked Saffron Potatoes</span>
-      <p class="text-xs md:text-base opacity-60 mt-3">
-        Heat oven to 350°F. Arrange potatoes in single layer in large round earthenware or ceramic baking dish, measuring about 10” in diameter...
+  <div class="relative flex flex-col md:grid grid-cols-3 gap-10 mt-10" v-if="!isLoading">
+    <div class="flex flex-col h-full" data-aos="fade-up" v-for="(r,i) in recipes" :key="r.id" :data-aos-delay="100 * (i % 3)">
+      <NuxtLink :to="`/recipes/${r.slug}`">
+        <img :src="`${SITE_URL}/recipe/images/${r.imageName}`" alt="recipes1" class="aspect-video object-bottom object-cover">
+      </NuxtLink>
+      <span class="text-2xl md:text-3xl font-modern mt-5">{{ r.title }}</span>
+      <p class="text-xs md:text-base opacity-60 mt-3 text-justify mb-4">
+        {{r.shortDescription}}
       </p>
-      <div class="flex items-center justify-between w-full mt-4">
-        <NuxtLink class="text-[#46AEAE] text-xs md:text-base">
+      <div class="flex items-center justify-between w-full mt-auto">
+        <NuxtLink :to="`/recipes/${r.slug}`" class="text-[#46AEAE] text-xs md:text-base">
           Read More
         </NuxtLink>
-        <span class="text-xs md:text-base opacity-50">265 Views</span>
-      </div>
-    </div>
-    <div class="flex flex-col" data-aos="fade-up" data-aos-delay="300">
-      <img src="~/assets/images/article2.png" alt="recipes2" class="aspect-video object-center object-cover">
-      <span class="text-2xl md:text-3xl font-modern mt-5">Baked Saffron Potatoes</span>
-      <p class="text-xs md:text-base opacity-60 mt-3">
-        Heat oven to 350°F. Arrange potatoes in single layer in large round earthenware or ceramic baking dish, measuring about 10” in diameter...
-      </p>
-      <div class="flex items-center justify-between w-full mt-4">
-        <NuxtLink class="text-[#46AEAE] text-xs md:text-base">
-          Read More
-        </NuxtLink>
-        <span class="text-xs md:text-base opacity-50">265 Views</span>
-      </div>
-    </div>
-    <div class="flex flex-col" data-aos="fade-up" data-aos-delay="400">
-      <img src="~/assets/images/article3.png" alt="recipes3" class="aspect-video object-center object-cover">
-      <span class="text-2xl md:text-3xl font-modern mt-5">Baked Saffron Potatoes</span>
-      <p class="text-xs md:text-base opacity-60 mt-3">
-        Heat oven to 350°F. Arrange potatoes in single layer in large round earthenware or ceramic baking dish, measuring about 10” in diameter...
-      </p>
-      <div class="flex items-center justify-between w-full mt-4">
-        <NuxtLink class="text-[#46AEAE] text-xs md:text-base">
-          Read More
-        </NuxtLink>
-        <span class="text-xs md:text-base opacity-50">265 Views</span>
-      </div>
-    </div>
-    <div class="flex flex-col" data-aos="fade-up" data-aos-delay="500">
-      <img src="~/assets/images/article1.png" alt="recipes1" class="aspect-video object-bottom object-cover">
-      <span class="text-2xl md:text-3xl font-modern mt-5">Baked Saffron Potatoes</span>
-      <p class="text-xs md:text-base opacity-60 mt-3">
-        Heat oven to 350°F. Arrange potatoes in single layer in large round earthenware or ceramic baking dish, measuring about 10” in diameter...
-      </p>
-      <div class="flex items-center justify-between w-full mt-4">
-        <NuxtLink class="text-[#46AEAE] text-xs md:text-base">
-          Read More
-        </NuxtLink>
-        <span class="text-xs md:text-base opacity-50">265 Views</span>
-      </div>
-    </div>
-    <div class="flex flex-col" data-aos="fade-up" data-aos-delay="600">
-      <img src="~/assets/images/article2.png" alt="recipes2" class="aspect-video object-center object-cover">
-      <span class="text-2xl md:text-3xl font-modern mt-5">Baked Saffron Potatoes</span>
-      <p class="text-xs md:text-base opacity-60 mt-3">
-        Heat oven to 350°F. Arrange potatoes in single layer in large round earthenware or ceramic baking dish, measuring about 10” in diameter...
-      </p>
-      <div class="flex items-center justify-between w-full mt-4">
-        <NuxtLink class="text-[#46AEAE] text-xs md:text-base">
-          Read More
-        </NuxtLink>
-        <span class="text-xs md:text-base opacity-50">265 Views</span>
-      </div>
-    </div>
-    <div class="flex flex-col" data-aos="fade-up" data-aos-delay="700">
-      <img src="~/assets/images/article3.png" alt="recipes3" class="aspect-video object-center object-cover">
-      <span class="text-2xl md:text-3xl font-modern mt-5">Baked Saffron Potatoes</span>
-      <p class="text-xs md:text-base opacity-60 mt-3">
-        Heat oven to 350°F. Arrange potatoes in single layer in large round earthenware or ceramic baking dish, measuring about 10” in diameter...
-      </p>
-      <div class="flex items-center justify-between w-full mt-4">
-        <NuxtLink class="text-[#46AEAE] text-xs md:text-base">
-          Read More
-        </NuxtLink>
-        <span class="text-xs md:text-base opacity-50">265 Views</span>
+        <span class="text-xs md:text-base opacity-50">{{ r.views }} Views</span>
       </div>
     </div>
   </div>
+  <div class="grid grid-cols-3 gap-10 mt-10" v-else>
+    <div class="min-h-[400px] skeleton flex flex-col gap-4" v-for=" i in 3">
+      <div class="w-full flex-1 skeleton-el"></div>
+      <div class="h-4 w-full skeleton-el"></div>
+      <div class="flex flex-col gap-2">
+        <div class="h-1 w-full skeleton-el"></div>
+        <div class="h-1 w-full skeleton-el"></div>
+        <div class="h-1 w-2/3 skeleton-el"></div>
+      </div>
+      <div class="flex items-center justify-between">
+        <div class="h-3 w-1/3 skeleton-el"></div>
+        <div class="h-3 w-1/3 skeleton-el"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Pagination -->
   <div class="flex items-center justify-center pt-20">
     <div class="flex items-center gap-10">
@@ -134,8 +87,44 @@
       </button>
     </div>
   </div>
-
 </div>
 </template>
 <script setup lang="ts">
+
+import type {RecipeFilterData, RecipeFilterParams} from "~/models/recipes/recipeModels";
+import type {PaginationData} from "~/models/baseFilterResult";
+import {GetAllRecipes} from "~/services/recipe.service";
+import {FillPaginationData} from "~/utilities/fillPaginationData";
+import {SITE_URL} from "~/utilities/api.config";
+
+const recipes:Ref<RecipeFilterData[]> = ref([]);
+const paginationData:Ref<PaginationData | null> = ref(null);
+
+const toast = useToast();
+const isLoading = ref(false);
+const pageId = ref(1);
+const filterParams:RecipeFilterParams = reactive({
+  take:9,
+  pageId:pageId.value,
+  search:undefined,
+  categoryId:undefined
+});
+
+onMounted(async ()=>{
+  await getData();
+})
+
+const getData = async ()=>{
+  isLoading.value = true;
+
+  const result = await GetAllRecipes(filterParams);
+  if(result.isSuccess){
+    recipes.value = result.data?.data ?? [];
+    paginationData.value = FillPaginationData(result.data!);
+  }else{
+    toast.showError(result.metaData);
+  }
+
+  isLoading.value = false;
+}
 </script>

@@ -1,23 +1,21 @@
 <template>
-  <div class="container mx-auto py-10 2xl:py-20">
+  <div class="container mx-auto py-10 2xl:py-20" v-if="!pending">
     <Head>
-      <Title>Saffron Shrimp Pappardelle | Premium Saffron</Title>
+      <Title>{{ Recipe.title }}</Title>
     </Head>
 
     <div class="flex flex-col md:flex-row items-start gap-6 md:w-5/6 2xl:w-3/4 mx-auto">
       <div class="flex-1 flex flex-col">
-        <img src="~/assets/images/article1.png" alt="article banner" class="w-full aspect-video object-cover z-[2]" data-aos="fade-up">
+        <img :src="`${SITE_URL}/recipe/images/${Recipe.imageName}`" :alt="Recipe.title" class="w-full aspect-video object-cover z-[2]" data-aos="fade-up">
         <div class="flex flex-col bg-[#FCF6E7] p-4 md:p-6">
-          <h1 class="text-2xl md:text-4xl font-modern" data-aos="fade-down" data-aos-delay="100">Saffron Shrimp Pappardelle</h1>
-          <div class="flex flex-col mt-3 md:flex-row md:items-center gap-2 justify-between">
-            <span class="capitalize text-xs md:text-lg text-[#46AEAE] opacity-90" data-aos="fade-down" data-aos-delay="200">Seafood pasta in a cream sauce with zucchini</span>
-            <span class="capitalize text-xs md:text-lg opacity-50" data-aos="fade-right" data-aos-delay="300">125 view</span>
+          <h1 class="text-2xl md:text-4xl font-modern" data-aos="fade-down" data-aos-delay="100">{{Recipe.title}}</h1>
+          <div class="flex flex-col mt-3 gap-2 justify-between">
+            <span class="capitalize text-xs md:text-lg text-[#46AEAE] opacity-90" data-aos="fade-down" data-aos-delay="200">{{ Recipe.descriptiveTitle }}</span>
+            <span class="capitalize self-end text-xs md:text-lg opacity-50" data-aos="fade-right" data-aos-delay="300">{{Recipe.views}} view</span>
           </div>
           <hr class="my-4 border-[#453F29]/10">
           <div class="flex flex-col" data-aos="fade-right">
-            <p class="text-xs md:text-base text-justify opacity-60">
-              Shrimp Pappardelle with a Saffron Cream Sauce makes a perfect romantic dinner, but you can enjoy this one anytime. The secret to the magic flavour is to use the real Spanish Saffron, fake powders just don’t cut it. The luscious and silky cream sauce with the shallot and white wine and seafood flavour will take you to paradise and back. It’s also quite quick and easy to make, so make it today, but share this Saffron Shrimp with someone you love.
-            </p>
+            <div v-html="Recipe.content"></div>
           </div>
         </div>
       </div>
@@ -26,34 +24,34 @@
         <div class="flex flex-col divide-y divide-[#453F29]/10 [&>div]:py-3 [&>div>span]:text-sm">
           <div class="flex items-center justify-between">
             <span class="capitalize" data-aos="fade-right" data-aos-delay="100">preparation time:</span>
-            <span data-aos="fade-right" data-aos-delay="200">10min</span>
+            <span data-aos="fade-right" data-aos-delay="200">{{ Recipe.preparationTime }}min</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="capitalize" data-aos="fade-right" data-aos-delay="200">cook time:</span>
-            <span data-aos="fade-right" data-aos-delay="300">20min</span>
+            <span data-aos="fade-right" data-aos-delay="300">{{ Recipe.cookTime }}min</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="capitalize" data-aos="fade-right" data-aos-delay="300">ready time:</span>
-            <span data-aos="fade-right" data-aos-delay="400">25min</span>
+            <span data-aos="fade-right" data-aos-delay="400">{{ Recipe.readyTime }}min</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="capitalize" data-aos="fade-right" data-aos-delay="400">serving:</span>
-            <span data-aos="fade-right" data-aos-delay="500">2</span>
+            <span data-aos="fade-right" data-aos-delay="500">{{ Recipe.servings }}</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="capitalize" data-aos="fade-right" data-aos-delay="500">cuisine:</span>
-            <span data-aos="fade-right" data-aos-delay="600">Italian</span>
+            <span data-aos="fade-right" data-aos-delay="600">{{ Cuisine[Recipe.cuisine] }}</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="capitalize" data-aos="fade-right" data-aos-delay="600">category:</span>
-            <span data-aos="fade-right" data-aos-delay="700">Pasta</span>
+            <span data-aos="fade-right" data-aos-delay="700">{{ Recipe.recipeCategory.title }}</span>
           </div>
           <div class="flex items-center justify-between">
             <span class="capitalize" data-aos="fade-right" data-aos-delay="700">difficulty level:</span>
             <div class="flex items-center gap-2" data-aos="fade-right" data-aos-delay="800">
              <div class="w-4 h-4 rotate-45 bg-[#504A33] opacity-70"></div>
-             <div class="w-4 h-4 rotate-45 bg-[#504A33] opacity-20"></div>
-             <div class="w-4 h-4 rotate-45 bg-[#504A33] opacity-20"></div>
+             <div :class="['w-4 h-4 rotate-45 bg-[#504A33]',Recipe.difficultyLevel == Difficulty.Normal ? 'opacity-70' : 'opacity-20']"></div>
+             <div :class="['w-4 h-4 rotate-45 bg-[#504A33]',Recipe.difficultyLevel == Difficulty.Hard ? 'opacity-70' : 'opacity-20']"></div>
             </div>
           </div>
         </div>
@@ -114,11 +112,30 @@
 </template>
 <script setup lang="ts">
 
+import {GetRecipeBySlug} from "~/services/recipe.service";
+import {Cuisine, Difficulty, type RecipeDto} from "~/models/recipes/recipeModels";
+import {SITE_URL} from "~/utilities/api.config";
+
 const showDetails = ref(false);
 
 const closeDetails = ()=>{
   showDetails.value = false;
 }
+
+const route = useRoute();
+const router = useRouter();
+const slug:string = route.params.slug;
+const {data,pending} = await useAsyncData(`GetRecipe-${slug}`,()=> GetRecipeBySlug(slug));
+if(!data.value?.isSuccess){
+  if(process.server){
+    throw createError({statusCode:404,message:'Recipe Not Found'});
+  }else{
+    router.push('/recipes');
+  }
+}
+
+const Recipe:Ref<RecipeDto> = ref(data.value?.data!);
+
 
 </script>
 

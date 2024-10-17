@@ -12,7 +12,12 @@ export default {
       fontFamily:{
         'modern':['"Modern No. 20"'],
         'inter':['Inter'],
+      },
+    extend:{
+      colors:{
+        primary:'#453F29',
       }
+    }
   },
   plugins: [],
 }

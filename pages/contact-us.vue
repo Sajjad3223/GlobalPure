@@ -27,16 +27,13 @@
             <h3 class="text-3xl md:text-5xl font-modern" data-aos="fade-right">Location</h3>
           </div>
           <div class="flex flex-col gap-1 text-sm md:text-2xl items-center md:items-start md:ml-12 mt-4">
-            <span data-aos="fade-down" data-aos-delay="400">
-              Unit 1416, wing 1, level 4, building 1, street 504, zone 49, business & innovation Park, ras bufontas, free zone
-            </span>
-            <span data-aos="fade-down" data-aos-delay="400">
-              Doha,Qatar
-            </span>
+            <p data-aos="fade-down" data-aos-delay="400">
+              {{globalStore.siteSettings.companyAddress.address}}
+            </p>
             <span data-aos="fade-down" data-aos-delay="600">
-              Tel: +97433817777
+              Tel: +{{globalStore.siteSettings.companyAddress.phone}}
             </span>
-            <span data-aos="fade-down" data-aos-delay="800">info@GlobalPureTrading.com</span>
+            <span data-aos="fade-down" data-aos-delay="800">{{ globalStore.siteSettings.companyAddress.email }}</span>
           </div>
         </div>
         <div class="flex flex-col items-center md:items-start gap-2 mt-12 md:mt-16">
@@ -49,7 +46,7 @@
             <h3 class="text-3xl md:text-5xl font-modern" data-aos="fade-right">Opening Hours</h3>
           </div>
           <div class="flex flex-col gap-1 text-sm md:text-2xl items-center md:items-start md:ml-12 mt-4">
-            <span data-aos="fade-down" data-aos-delay="200">Sunday 8:00 AM – 2:00 PM</span>
+            <span data-aos="fade-down" data-aos-delay="200">{{ globalStore.siteSettings.companyAddress.openingHours }}</span>
           </div>
         </div>
       </div>
@@ -81,15 +78,17 @@
 
 import {SendContactForm} from "~/services/contact.service";
 
-const email = ref(null);
-const message = ref(null);
-const service = ref(null);
-const attachFile = ref(null);
+const globalStore = useGlobalStore();
+
+const email:Ref<string | null> = ref(null);
+const message:Ref<string | null> = ref(null);
+const attachFile:Ref<File | null> = ref(null);
 const serviceOptions = [
   {title:'Buy Issue',value:'Buy Issue'},
   {title:'Get Information',value:'Get Information'},
   {title:'Bug Report',value:'Bug Report'},
 ]
+const service:Ref<string | null> = ref(serviceOptions[0].value);
 
 const toast = useToast();
 const sendForm = async ()=>{
@@ -103,6 +102,9 @@ const sendForm = async ()=>{
   const result = await SendContactForm(formData);
   if(result.isSuccess){
     toast.showToast(result.metaData.message);
+    email.value = "";
+    message.value = "";
+    attachFile.value = null;
   }else{
     toast.showError(result.metaData);
   }

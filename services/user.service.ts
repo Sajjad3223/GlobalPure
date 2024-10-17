@@ -7,7 +7,7 @@ import type {
 } from "~/models/users/userCommands";
 import type {ApiResponse} from "~/models/apiResponse";
 import {FetchApi} from "~/utilities/CustomApiFetch";
-import type {UserDto} from "~/models/users/userDto";
+import type {UserDto, WishlistDto} from "~/models/users/userDto";
 
 export const GetCurrentUser = ():Promise<ApiResponse<UserDto | null>> =>{
     return FetchApi(`/user/current`,{
@@ -72,5 +72,16 @@ export const ConfirmEmail = (code:string):Promise<ApiResponse<undefined>> =>{
         body:{
             code
         }
+    });
+}
+
+export const GetWishlist = ():Promise<ApiResponse<WishlistDto[]>> => {
+    return FetchApi(`/user/wishlist`,{
+        method:'GET'
+    });
+}
+export const ToggleWishlist = (productId:number)=>{
+    return FetchApi(`/user/wishlist/${productId}`,{
+        method:'POST',
     });
 }
