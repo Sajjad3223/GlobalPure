@@ -3,10 +3,10 @@
     <Head>
       <Title>Wishlist | Premium Saffron</Title>
     </Head>
-    <div class="grid grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div class="pr-4 border-r pb-4 border-b h-full flex flex-col gap-4" v-for="w in wishlist" :key="w.id">
         <NuxtLink :to="`/product/${w.wishlistProduct.slug}`">
-          <img :src="`${SITE_URL}/product/images/${w.wishlistProduct.image}`" :alt="w.title" class="mx-auto max-h-[250px] object-contain">
+          <img :src="`${SITE_URL}/product/images/${w.wishlistProduct.image}`" :alt="w.title" class="mx-auto h-[200px] object-contain">
         </NuxtLink>
         <NuxtLink :to="`/product/${w.wishlistProduct.slug}`">{{w.wishlistProduct.title}}</NuxtLink>
         <div class="flex items-center gap-2 mt-auto">

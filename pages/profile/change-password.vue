@@ -4,12 +4,13 @@
       <Title>Change Password | Premium Saffron</Title>
     </Head>
 
-    <form class="w-full grid grid-cols-2 gap-4" @submit.prevent="updatePassword">
+    <form class="w-full grid md:grid-cols-2 gap-4" @submit.prevent="updatePassword">
       <BaseGInput type="password" label="Current Password" v-model="changePasswordCommand.oldPassword"/>
       <div></div>
       <BaseGInput type="password" label="New Password" v-model="changePasswordCommand.newPassword"/>
       <BaseGInput type="password" label="Confirm New Password"/>
       <BaseGButton type="submit">Change Password</BaseGButton>
+      <NuxtLink to="/profile/information" class="py-4 text-center w-full bg-primary/10 text-primary md:hidden" >Back</NuxtLink>
     </form>
 
   </div>

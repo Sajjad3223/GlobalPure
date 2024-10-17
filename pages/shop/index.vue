@@ -34,7 +34,7 @@
           </div>
         </Transition>
       </div>
-      <div class="relative w-max py-5" data-aos="fade-left" data-aos-delay="200">
+      <div class="hidden md:flex relative w-max py-5" data-aos="fade-left" data-aos-delay="200">
         <button @click="showOrderType = !showOrderType" class="flex items-center gap-2">
           <span>Sort Type</span>
           <svg width="13" height="9" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -65,7 +65,7 @@
         </button>
 
         <Transition name="slideDown">
-          <div v-if="showPriceFilter" v-click-outside="closePriceFilter" class="absolute left-1/2 -translate-x-1/2 w-max min-w-[300px] p-6 right-auto top-full flex flex-col gap-1 bg-[#FEFCF8] border border-[#453F29]">
+          <div v-if="showPriceFilter" v-click-outside="closePriceFilter" class="absolute right-0 translate-x-1/4 md:left-1/2 md:-translate-x-1/2 w-max min-w-[300px] p-6 md:right-auto top-full flex flex-col gap-1 bg-[#FEFCF8] border border-[#453F29]">
             <GRange :min="0" :max="200" v-model="rangeValue" />
           </div>
         </Transition>
@@ -74,11 +74,11 @@
   </div>
   <hr class="border border-[#453F29] opacity-20">
   <!-- Products -->
-  <div class="relative grid grid-cols-2 md:grid-cols-4 gap-10 mt-10" v-if="!isLoading">
+  <div class="relative grid grid-cols-2 md:grid-cols-4 gap-10 mt-10" v-if="!loading">
     <GCard v-for="(p,i) in products" :product="p" :key="p.id" data-aos="fade-left" :data-aos-delay="200 * i" />
   </div>
-  <div class="grid grid-cols-4 gap-10 mt-4" v-else>
-    <div class="w-full flex skeleton flex-col min-h-[400px] gap-4" v-for="i in 8" :data-aos-delay="200 * i">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-10 mt-4" v-else>
+    <div class="w-full flex skeleton flex-col min-h-[200px] md:min-h-[400px] gap-4" v-for="i in 8" :data-aos-delay="200 * i">
       <div class="skeleton-el w-full flex-1 rounded-lg"></div>
       <div class="skeleton-el w-1/3 h-2 rounded-lg"></div>
       <div class="skeleton-el w-full h-4 rounded-lg"></div>

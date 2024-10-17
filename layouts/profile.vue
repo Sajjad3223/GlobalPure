@@ -1,10 +1,10 @@
 <template>
 <div>
   <GHeader />
-  <div class="container mx-auto py-20">
+  <div class="container mx-auto py-10 md:py-20">
     <div class="flex md:w-max mx-auto relative z-[1] flex-row md:flex-col items-center justify-center text-[#504A33]">
       <h2 class="text-4xl md:text-7xl font-modern" data-aos="fade-up">{{ route.meta.title }}</h2>
-      <button class="md:hidden absolute left-0">
+      <button @click="showProfileNav = true" class="md:hidden absolute left-0">
         <svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g opacity="0.7">
             <path d="M8.5 15L1.5 8L8.5 1" stroke="#504A33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -63,15 +63,6 @@
             </NuxtLink>
           </li>
           <li>
-            <NuxtLink to="/profile/vouchers" class="px-8 py-3 hover:bg-[#F0E9D8] flex items-center gap-3 opacity-70" exact-active-class="activePanel">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1.82294 11.7327L6.26865 16.1784C6.42937 16.3389 6.64723 16.4291 6.87437 16.4291C7.10151 16.4291 7.31937 16.3389 7.48008 16.1784L16.3029 7.35556C16.3473 7.31318 16.3816 7.26142 16.4033 7.20407C16.4251 7.14673 16.4337 7.08525 16.4286 7.02413L15.7544 2.64698C15.7489 2.54268 15.705 2.4441 15.6312 2.37025C15.5572 2.29639 15.4587 2.25248 15.3544 2.24698L10.9772 1.5727C10.9161 1.56763 10.8546 1.57628 10.7973 1.59803C10.7399 1.61978 10.6882 1.65408 10.6458 1.69841L1.82294 10.5213C1.66243 10.682 1.57227 10.8998 1.57227 11.127C1.57227 11.3541 1.66243 11.572 1.82294 11.7327Z" stroke="#504A33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M12.3019 6.26981C11.9863 6.26981 11.7305 6.01397 11.7305 5.69838C11.7305 5.38279 11.9863 5.12695 12.3019 5.12695C12.6175 5.12695 12.8733 5.38279 12.8733 5.69838C12.8733 6.01397 12.6175 6.26981 12.3019 6.26981Z" stroke="#504A33" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              <span>Vouchers</span>
-            </NuxtLink>
-          </li>
-          <li>
             <NuxtLink to="/profile/wishlist" class="px-8 py-3 hover:bg-[#F0E9D8] flex items-center gap-3 opacity-70" exact-active-class="activePanel">
               <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M10.4475 13.6089C9.63366 14.4151 8.37315 14.4151 7.55927 13.6089L2.70528 8.79977C-0.541951 5.55248 3.69836 -1.62196 9.0034 3.68308C14.2991 -1.61263 18.5395 5.56191 15.3015 8.79977L10.4475 13.6089Z" stroke="#493E17" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -97,6 +88,29 @@
       </div>
     </div>
 
+    <Transition name="fade">
+      <div v-if="showProfileNav" class="fixed inset-0 bg-white z-40 pt-32 pb-10">
+        <div class="flex flex-col items-center gap-4 h-full">
+          <NuxtLink @click="showProfileNav = false" to="/profile" class="w-full py-4 text-center text-2xl" exact-active-class="activePanel-mobile">
+            Dashboard
+          </NuxtLink>
+          <NuxtLink @click="showProfileNav = false" to="/profile/information" class="w-full py-4 text-center text-2xl" exact-active-class="activePanel-mobile">
+            User Information
+          </NuxtLink>
+          <NuxtLink @click="showProfileNav = false" to="/profile/orders" class="w-full py-4 text-center text-2xl" exact-active-class="activePanel-mobile">
+            Orders
+          </NuxtLink>
+          <NuxtLink @click="showProfileNav = false" to="/profile/wishlist" class="w-full py-4 text-center text-2xl" exact-active-class="activePanel-mobile">
+            Wishlist
+          </NuxtLink>
+
+          <button @click="authStore.logOut" class="w-full py-4 text-center text-2xl text-red-700 mt-auto">
+            Log Out
+          </button>
+        </div>
+      </div>
+    </Transition>
+
   </div>
   <GFooter v-if="false" />
 </div>
@@ -104,7 +118,11 @@
 
 <script setup lang="ts">
 
+import ChangePassword from "~/pages/profile/change-password.vue";
+
 const route = useRoute();
+
+const showProfileNav = ref(false);
 
 const authStore = useAuthStore();
 const LogOut = ()=>{
@@ -120,6 +138,9 @@ const LogOut = ()=>{
 .activePanel{
   @apply !opacity-100 relative;
 }
+.activePanel-mobile{
+  @apply bg-primary/10 text-primary;
+}
 .activePanel:before{
   content:'';
   width: 0;
@@ -129,5 +150,15 @@ const LogOut = ()=>{
   border-bottom: 10px solid transparent;
   position: absolute;
   left: 0;
+}
+
+.fade-enter-active,
+.fade-leave-active{
+  @apply transition-opacity duration-300;
+}
+
+.fade-enter-from,
+.fade-leave-to{
+  @apply opacity-0;
 }
 </style>

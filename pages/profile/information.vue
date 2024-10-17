@@ -3,13 +3,18 @@
     <Head>
       <Title>Information | Premium Saffron</Title>
     </Head>
-    <form v-if="!pending" class="grid grid-cols-2 gap-4" @submit.prevent="updateInfo">
-      <BaseGInput label="First Name" name="firstName" v-model="editUserCommand.firstName" />
-      <BaseGInput label="Last Name" name="lastName" v-model="editUserCommand.lastName"/>
-      <BaseGInput label="Email" name="email" v-model="editUserCommand.email"/>
-      <BaseGInput label="Phone Number" name="phoneNumber" v-model="editUserCommand.phoneNumber"/>
-      <BaseGButton type="submit">Edit Information</BaseGButton>
-    </form>
+    <div class="flex w-full flex-col gap-4">
+      <form v-if="!pending" class="grid md:grid-cols-2 gap-4" @submit.prevent="updateInfo">
+        <BaseGInput label="First Name" name="firstName" v-model="editUserCommand.firstName" />
+        <BaseGInput label="Last Name" name="lastName" v-model="editUserCommand.lastName"/>
+        <BaseGInput label="Email" name="email" v-model="editUserCommand.email"/>
+        <BaseGInput label="Phone Number" name="phoneNumber" v-model="editUserCommand.phoneNumber"/>
+        <BaseGButton type="submit">Edit Information</BaseGButton>
+      </form>
+      <NuxtLink to="/profile/change-password" class="bg-primary/10 text-primary w-full py-4 text-center md:hidden">
+        Change Password
+      </NuxtLink>
+    </div>
   </div>
 </template>
 

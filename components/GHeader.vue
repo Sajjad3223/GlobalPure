@@ -152,17 +152,17 @@
           <li data-animation-offset="0.4">
             <NuxtLink to="/about-us" exact-active-class="activeMobileNavLink" @click="closeNavbar">our story</NuxtLink>
           </li>
-          <li data-animation-offset="0.5">
-            <NuxtLink to="/quality" exact-active-class="activeMobileNavLink" @click="closeNavbar">quality</NuxtLink>
-          </li>
           <li data-animation-offset="0.6">
             <NuxtLink to="/recipes" exact-active-class="activeMobileNavLink" @click="closeNavbar">recipes</NuxtLink>
           </li>
           <li data-animation-offset="0.7">
             <NuxtLink to="/contact-us" exact-active-class="activeMobileNavLink" @click="closeNavbar">contact us</NuxtLink>
           </li>
-          <li data-animation-offset="0.9">
+          <li data-animation-offset="0.9" v-if="!authStore.isLoggedIn">
             <NuxtLink to="/auth" exact-active-class="activeMobileNavLink" @click="closeNavbar">log in/sign up</NuxtLink>
+          </li>
+          <li data-animation-offset="0.9" v-else>
+            <NuxtLink to="/profile" exact-active-class="activeMobileNavLink" @click="closeNavbar">Profile</NuxtLink>
           </li>
         </ul>
       </div>

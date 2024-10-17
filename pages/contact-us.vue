@@ -26,7 +26,7 @@
             </svg>
             <h3 class="text-3xl md:text-5xl font-modern" data-aos="fade-right">Location</h3>
           </div>
-          <div class="flex flex-col gap-1 text-sm md:text-2xl items-center md:items-start md:ml-12 mt-4">
+          <div class="flex flex-col gap-4  text-sm md:text-2xl md:ml-12 mt-4">
             <p data-aos="fade-down" data-aos-delay="400">
               {{globalStore.siteSettings.companyAddress.address}}
             </p>

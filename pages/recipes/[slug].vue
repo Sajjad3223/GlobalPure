@@ -56,7 +56,7 @@
           </div>
         </div>
       </div>
-      <TransitionGroup tag="div" name="details" :class="['md:hidden fixed bottom-0 inset-x-0 transition-all overflow-hidden h-max duration-300 bg-white/40 backdrop-blur-lg flex items-center justify-center border-t border-black/20 drop-shadow-lg',
+      <TransitionGroup tag="div" name="details" :class="['md:hidden fixed bottom-0 inset-x-0 z-20 transition-all overflow-hidden h-max duration-300 bg-white/40 backdrop-blur-lg flex items-center justify-center border-t border-black/20 drop-shadow-lg',
                 showDetails ? 'min-h-[450px]' : 'min-h-[60px]']">
         <div v-if="!showDetails" @click="showDetails = true" class="w-full h-full flex items-center">
           <button class="w-full py-2">Details</button>
@@ -73,34 +73,34 @@
           <div class="flex flex-col divide-y divide-[#453F29]/10 [&>div]:py-3 [&>div>span]:text-sm">
             <div class="flex items-center justify-between">
               <span class="capitalize">preparation time:</span>
-              <span>10min</span>
+              <span>{{ Recipe.preparationTime }}min</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="capitalize">cook time:</span>
-              <span>20min</span>
+              <span>{{ Recipe.cookTime }}min</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="capitalize">ready time:</span>
-              <span>25min</span>
+              <span>{{ Recipe.readyTime }}min</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="capitalize">serving:</span>
-              <span>2</span>
+              <span>{{ Recipe.servings }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="capitalize">cuisine:</span>
-              <span>Italian</span>
+              <span>{{ Cuisine[Recipe.cuisine] }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="capitalize">category:</span>
-              <span>Pasta</span>
+              <span>{{ Recipe.recipeCategory.title }}</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="capitalize">difficulty level:</span>
               <div class="flex items-center gap-2">
                 <div class="w-4 h-4 rotate-45 bg-[#504A33] opacity-70"></div>
-                <div class="w-4 h-4 rotate-45 bg-[#504A33] opacity-20"></div>
-                <div class="w-4 h-4 rotate-45 bg-[#504A33] opacity-20"></div>
+                <div :class="['w-4 h-4 rotate-45 bg-[#504A33]',Recipe.difficultyLevel == Difficulty.Normal ? 'opacity-70' : 'opacity-20']"></div>
+                <div :class="['w-4 h-4 rotate-45 bg-[#504A33]',Recipe.difficultyLevel == Difficulty.Hard ? 'opacity-70' : 'opacity-20']"></div>
               </div>
             </div>
           </div>
